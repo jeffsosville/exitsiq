@@ -32,7 +32,9 @@
   nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
   .logo{font-family:'Fraunces',serif;font-weight:600;font-size:23px;letter-spacing:-.01em}
   .logo b{color:var(--moss)}
-  .navlinks{display:flex;gap:28px;align-items:center}
+  a.logo{text-decoration:none;color:inherit;transition:opacity .15s}
+  a.logo:hover{opacity:.68}
+  .navlinks{display:flex;gap:24px;align-items:center}
   .navlinks a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
   .navlinks a:hover{color:var(--moss)}
   .btn{display:inline-block;background:var(--moss);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:2px;border:1px solid var(--moss-deep);transition:background .15s;cursor:pointer}
@@ -101,6 +103,7 @@
   .sec-head{max-width:700px;margin-bottom:46px}
   .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
   .sec-head h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,3.7vw,44px);line-height:1.05;letter-spacing:-.015em;margin:14px 0 16px}
+  .sec-head h2 em{font-style:italic;color:var(--moss)}
   .sec-head p{font-size:17px;color:var(--muted)}
 
   /* SIGNAL ENGINE */
@@ -152,6 +155,66 @@
   .rr-bar{height:6px;background:#ddd4bf;border-radius:4px;overflow:hidden;margin-top:4px}
   .rr-bar i{display:block;height:100%;width:0;background:var(--moss);border-radius:4px;transition:width 1.3s ease}
 
+  /* DEAL STRUCTURE */
+  .ds-grid{display:grid;grid-template-columns:330px 1fr;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}
+  .ds-controls{padding:28px 26px;background:var(--paper-2);border-right:1px solid var(--line)}
+  .ds-results{padding:28px 26px}
+  .ds-f{margin-bottom:19px}
+  .ds-f label{display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--muted);margin-bottom:7px}
+  .ds-f label b{color:var(--ink);font-weight:600;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:0}
+  .ds-money{display:flex;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:4px}
+  .ds-money span{padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted)}
+  .ds-money input{flex:1;min-width:0;border:0;background:transparent;outline:0;padding:10px 11px 10px 0;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink)}
+  input[type=range].ds-r{width:100%;accent-color:var(--moss);margin:2px 0 0}
+  .ds-two{display:flex;gap:12px}
+  .ds-two .ds-f{flex:1}
+  .ds-mini{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:9px 10px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);outline:0}
+  .ds-mini:focus,.ds-money input:focus{border-color:var(--moss)}
+  .ds-mini::-webkit-outer-spin-button,.ds-mini::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .ds-mini[type=number]{-moz-appearance:textfield}
+  .ds-alloc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin:-8px 0 19px}
+  .ds-alloc.bad{color:var(--signal)}
+  .ds-head{display:flex;align-items:flex-end;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px}
+  .ds-hl{flex:1}
+  .ds-hl .l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .ds-hl .v{font-family:'Fraunces',serif;font-size:clamp(28px,3.4vw,38px);font-weight:600;line-height:1.05;margin-top:5px}
+  .ds-hl.keep .v{color:var(--moss)}
+  .ds-sep{font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--line);padding-bottom:10px}
+  .ds-bar{display:flex;height:32px;border-radius:4px;overflow:hidden;border:1px solid var(--line);margin-bottom:9px}
+  .ds-seg{display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#fff;transition:flex-basis .3s ease;white-space:nowrap;overflow:hidden}
+  .ds-seg.c{background:var(--moss)}
+  .ds-seg.n{background:var(--gold)}
+  .ds-seg.e{background:var(--signal-soft);color:var(--ink)}
+  .ds-key{display:flex;gap:18px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+  .ds-key i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+  .ds-key .k1{background:var(--moss)}.ds-key .k2{background:var(--gold)}.ds-key .k3{background:var(--signal-soft)}
+  .ds-row{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)}
+  .ds-row .t{font-size:14px}
+  .ds-row .t small{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+  .ds-row .g{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);text-align:right;min-width:84px}
+  .ds-row .v{font-family:'Fraunces',serif;font-size:18px;font-weight:600;text-align:right;min-width:98px}
+  .ds-row.tot .v{font-size:24px;color:var(--moss)}
+  .ds-gap{margin-top:20px;padding:16px 18px;background:var(--paper-2);border-left:3px solid var(--signal);border-radius:0 4px 4px 0;font-size:14px;line-height:1.6;color:#33433d}
+  .ds-gap b{color:var(--ink);font-weight:600}
+  .ds-fine{margin-top:20px;font-size:11.5px;line-height:1.6;color:var(--muted)}
+
+  /* ADVISOR */
+  .adv-grid{display:grid;grid-template-columns:320px 1fr;gap:56px;align-items:start}
+  .adv-grid + .adv-grid{margin-top:54px;padding-top:54px;border-top:1px solid var(--line)}
+  .adv-grid.flip{grid-template-columns:1fr 320px}
+  .adv-grid.flip .adv-media{order:2}
+  .adv-portrait{width:100%;aspect-ratio:4/5;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .adv-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+  .adv-portrait span{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;padding:0 18px}
+  .adv-name{font-family:'Fraunces',serif;font-size:clamp(30px,3.6vw,46px);font-weight:600;letter-spacing:-.02em;line-height:1.03;margin:12px 0 6px}
+  .adv-role{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);margin-bottom:28px}
+  .adv-body p{font-size:16.5px;color:var(--muted);margin-bottom:18px;max-width:60ch}
+  .adv-body p.lead{font-size:19px;color:var(--ink)}
+  .adv-quote{margin-top:30px;padding:20px 0 20px 24px;border-left:3px solid var(--moss);font-family:'Fraunces',serif;font-style:italic;font-size:19px;line-height:1.5;color:var(--moss-deep);max-width:52ch}
+  .adv-stats{display:flex;gap:52px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .adv-sn{font-family:'Fraunces',serif;font-size:32px;font-weight:600;line-height:1}
+  .adv-sl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
   /* GRAPH */
   .graph-sec{background:var(--ink);color:var(--paper);border:none}
   .graph-sec .eyebrow{color:var(--signal-soft)}
@@ -199,6 +262,17 @@
     .metrics{grid-template-columns:1fr}
     .navlinks{display:none}
     .trow,.triggers-head{grid-template-columns:1fr auto 1fr;font-size:12.5px}
+    .ds-grid{grid-template-columns:1fr}
+    .ds-controls{border-right:none;border-bottom:1px solid var(--line)}
+    .ds-head{flex-direction:column;align-items:flex-start;gap:16px}
+    .ds-sep{display:none}
+    .ds-row{grid-template-columns:1fr auto}
+    .ds-row .g{display:none}
+    .adv-grid{grid-template-columns:1fr;gap:34px}
+    .adv-grid.flip{grid-template-columns:1fr}
+    .adv-grid.flip .adv-media{order:0}
+    .adv-portrait{max-width:250px}
+    .adv-stats{gap:34px}
   }
   @media(max-width:560px){.wrap{padding:0 22px}.signal-grid{grid-template-columns:1fr}}
 </style>
@@ -207,11 +281,12 @@
 
 <nav>
   <div class="wrap">
-    <div class="logo">Exits<b>IQ</b></div>
+    <a class="logo" href="/" aria-label="ExitsIQ home">Exits<b>IQ</b></a>
     <div class="navlinks">
       <a href="#signals">Signal Engine</a>
       <a href="#cxo">AI Exit Officer</a>
       <a href="#timeline">Exit Timeline</a>
+      <a href="#structure">Deal Structure</a>
       <a href="#graph">The Graph</a>
       <a href="#start" class="btn">Get my readiness score</a>
     </div>
@@ -385,6 +460,120 @@
   </div>
 </section>
 
+<!-- DEAL STRUCTURE -->
+<section id="structure">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Deal Structure</span>
+      <h2>The price isn't the number. <em>What you keep is.</em></h2>
+      <p>Almost no Main Street business sells for all cash at closing. The headline price splits into money you get on day one, a note you carry yourself, and an earnout you might never collect. Same sale price — very different life.</p>
+    </div>
+
+    <div class="ds-grid">
+      <div class="ds-controls">
+        <div class="ds-f">
+          <label><b>Sale price</b></label>
+          <div class="ds-money"><span>$</span><input id="dsPrice" type="text" inputmode="numeric" value="2,000,000"></div>
+        </div>
+
+        <div class="ds-f">
+          <label><b>Cash at close</b><span id="dsCashPct">60%</span></label>
+          <input id="dsCash" class="ds-r" type="range" min="0" max="100" step="5" value="60">
+        </div>
+
+        <div class="ds-f">
+          <label><b>Seller note</b><span id="dsNotePct">30%</span></label>
+          <input id="dsNote" class="ds-r" type="range" min="0" max="100" step="5" value="30">
+        </div>
+
+        <div class="ds-two">
+          <div class="ds-f">
+            <label>Note rate %</label>
+            <input id="dsRate" class="ds-mini" type="number" step="0.5" value="6">
+          </div>
+          <div class="ds-f">
+            <label>Term (yrs)</label>
+            <input id="dsTerm" class="ds-mini" type="number" step="1" value="5">
+          </div>
+        </div>
+
+        <div class="ds-f">
+          <label><b>Earnout</b><span id="dsEarnPct">10%</span></label>
+          <input id="dsEarn" class="ds-r" type="range" min="0" max="100" step="5" value="10">
+        </div>
+
+        <div class="ds-alloc" id="dsAlloc">Allocated: 100%</div>
+
+        <div class="ds-f">
+          <label><b>Odds you collect it</b><span id="dsProbPct">50%</span></label>
+          <input id="dsProb" class="ds-r" type="range" min="0" max="100" step="5" value="50">
+        </div>
+
+        <div class="ds-two">
+          <div class="ds-f">
+            <label>Tax rate %</label>
+            <input id="dsTax" class="ds-mini" type="number" step="1" value="25">
+          </div>
+          <div class="ds-f">
+            <label>Discount %</label>
+            <input id="dsDisc" class="ds-mini" type="number" step="0.5" value="8">
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-results">
+        <div class="ds-head">
+          <div class="ds-hl">
+            <div class="l">Headline price</div>
+            <div class="v" id="dsOutHeadline">$2,000,000</div>
+          </div>
+          <div class="ds-sep">→</div>
+          <div class="ds-hl keep">
+            <div class="l">What you actually keep</div>
+            <div class="v" id="dsOutReal">$0</div>
+          </div>
+        </div>
+
+        <div class="ds-bar">
+          <div class="ds-seg c" id="dsSegCash"></div>
+          <div class="ds-seg n" id="dsSegNote"></div>
+          <div class="ds-seg e" id="dsSegEarn"></div>
+        </div>
+        <div class="ds-key">
+          <span><i class="k1"></i>Cash at close</span>
+          <span><i class="k2"></i>Seller note</span>
+          <span><i class="k3"></i>Earnout</span>
+        </div>
+
+        <div class="ds-row">
+          <div class="t">Cash at close<small>Yours on day one. Certain.</small></div>
+          <div class="g" id="dsGrossCash">—</div>
+          <div class="v" id="dsNetCash">—</div>
+        </div>
+        <div class="ds-row">
+          <div class="t">Seller note<small id="dsNoteDesc">Paid to you over time. Discounted for time, then reduced for default risk.</small></div>
+          <div class="g" id="dsGrossNote">—</div>
+          <div class="v" id="dsNetNote">—</div>
+        </div>
+        <div class="ds-row">
+          <div class="t">Earnout<small id="dsEarnDesc">Contingent on performance after you've stopped running it.</small></div>
+          <div class="g" id="dsGrossEarn">—</div>
+          <div class="v" id="dsNetEarn">—</div>
+        </div>
+        <div class="ds-row tot">
+          <div class="t">Risk- and time-adjusted, after tax</div>
+          <div class="g"></div>
+          <div class="v" id="dsTotal">—</div>
+        </div>
+
+        <div class="ds-gap" id="dsGap"></div>
+
+        <p class="ds-fine">Gross figures on the left of each line, adjusted after-tax figures on the right. The note is valued at present value using your discount rate, then reduced for default risk. The earnout is weighted by your stated odds of collecting. Estimates only — not financial, legal, or tax advice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- THE EXITSIQ GRAPH -->
 <section id="graph" class="graph-sec">
   <div class="wrap">
@@ -442,6 +631,64 @@
   </div>
 </section>
 
+<!-- ADVISOR -->
+<section id="advisor">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Who's behind it</span>
+      <h2>Two people who've spent a decade on <em>both sides</em> of the table.</h2>
+      <p>One has closed the deals. The other built the data underneath them. ExitsIQ is what happens when those two things finally sit in the same system.</p>
+    </div>
+
+    <div class="adv-grid">
+      <div class="adv-media">
+        <div class="adv-portrait">
+          <img src="/john.jpg" alt="John Sosville, Lead Advisor at ExitsIQ">
+        </div>
+      </div>
+      <div>
+        <h3 class="adv-name">John Sosville</h3>
+        <div class="adv-role">Lead Advisor</div>
+        <div class="adv-body">
+          <p class="lead">John has closed over 200 business transactions representing more than $100M in value.</p>
+          <p>Since 2013 he's sat across the table from hundreds of owners at the moment they find out what their business is actually worth — and watched the ones who prepared walk away with materially more than the ones who didn't.</p>
+          <p>ExitsIQ is the system he wished those owners had five years earlier.</p>
+        </div>
+        <blockquote class="adv-quote">We create competition to drive price up, and we protect both buyer and seller.</blockquote>
+        <div class="adv-stats">
+          <div><div class="adv-sn">200+</div><div class="adv-sl">Transactions Closed</div></div>
+          <div><div class="adv-sn">$100M+</div><div class="adv-sl">In Deal Value</div></div>
+          <div><div class="adv-sn">2013</div><div class="adv-sl">Advising Since</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adv-grid flip">
+      <div class="adv-media">
+        <div class="adv-portrait">
+          <img src="/jeff.jpg" alt="Jeff Sosville, Founder of ExitsIQ" style="object-position:62% center">
+        </div>
+      </div>
+      <div>
+        <h3 class="adv-name">Jeff Sosville</h3>
+        <div class="adv-role">Founder &amp; Platform</div>
+        <div class="adv-body">
+          <p class="lead">Jeff builds the data layer that most of this industry has never had.</p>
+          <p>After a decade of watching deals get priced on rules of thumb and stale comps, he built DealLedger — an open index tracking tens of thousands of businesses for sale across the country, with the one thing the market has always been missing: memory. What actually sold. What sat. What quietly came back under a new name.</p>
+          <p>Every number ExitsIQ shows an owner traces back to that record, not to a multiple someone repeated at a conference.</p>
+        </div>
+        <blockquote class="adv-quote">A market that can't remember can't price anything honestly.</blockquote>
+        <div class="adv-stats">
+          <div><div class="adv-sn">65K+</div><div class="adv-sl">Listings Indexed</div></div>
+          <div><div class="adv-sn">1,500+</div><div class="adv-sl">Broker Sources</div></div>
+          <div><div class="adv-sn">Daily</div><div class="adv-sl">Data Refresh</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- FINAL -->
 <section id="start" class="final">
   <div class="wrap">
@@ -457,11 +704,12 @@
 
 <footer>
   <div class="wrap">
-    <div class="logo">Exits<b>IQ</b></div>
+    <a class="logo" href="/" aria-label="ExitsIQ home" style="margin-left:0">Exits<b>IQ</b></a>
     <div>
       <a href="#signals">Signals</a>
       <a href="#cxo">AI Exit Officer</a>
       <a href="#timeline">Timeline</a>
+      <a href="#structure">Deal Structure</a>
       <a href="#graph">The Graph</a>
     </div>
   </div>
@@ -516,6 +764,9 @@
     else if(score>=45){v.textContent='GETTING READY';}
     else{v.textContent='EARLY STAGE';}
 
+    // feed the Deal Structure section, unless the visitor has edited it themselves
+    if(window.dsSync) window.dsSync(bizValue);
+
     return score;
   }
   function animateGauge(){
@@ -545,6 +796,103 @@
   },{threshold:.3});
   io.observe(document.querySelector('.gauge-card'));
   io.observe(document.getElementById('timeline'));
+
+  // ---- Deal structure calculator ----
+  (function(){
+    var $=function(id){return document.getElementById(id);};
+    var priceTouched=false;
+
+    function money(n){
+      if(!isFinite(n))n=0;
+      return '$'+Math.round(n).toLocaleString('en-US');
+    }
+    function num(v){
+      var n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+      return isFinite(n)?n:0;
+    }
+    // Present value of a level-payment amortizing note.
+    function notePV(principal,rate,years,disc){
+      if(principal<=0||years<=0)return 0;
+      var r=rate/100,d=disc/100;
+      var pmt=(r===0)?principal/years:principal*r/(1-Math.pow(1+r,-years));
+      if(d===0)return pmt*years;
+      return pmt*(1-Math.pow(1+d,-years))/d;
+    }
+
+    function dsCalc(){
+      var price=num($('dsPrice').value);
+      var cashP=num($('dsCash').value), noteP=num($('dsNote').value), earnP=num($('dsEarn').value);
+      var rate=num($('dsRate').value), term=num($('dsTerm').value), prob=num($('dsProb').value);
+      var tax=num($('dsTax').value)/100, disc=num($('dsDisc').value);
+
+      $('dsCashPct').textContent=cashP+'%';
+      $('dsNotePct').textContent=noteP+'%';
+      $('dsEarnPct').textContent=earnP+'%';
+      $('dsProbPct').textContent=prob+'%';
+
+      var alloc=cashP+noteP+earnP;
+      var a=$('dsAlloc');
+      a.textContent='Allocated: '+alloc+'%'+(alloc===100?'':(alloc>100?' — over by '+(alloc-100)+'%':' — '+(100-alloc)+'% unassigned'));
+      a.className='ds-alloc'+(alloc===100?'':' bad');
+
+      var grossCash=price*cashP/100, grossNote=price*noteP/100, grossEarn=price*earnP/100;
+
+      // Default risk grows the longer the note is outstanding, floored at 65%.
+      var noteRisk=Math.max(0.65,1-(term*0.03));
+      var pv=notePV(grossNote,rate,term,disc)*noteRisk;
+      var earnAdj=grossEarn*(prob/100);
+
+      var netCash=grossCash*(1-tax), netNote=pv*(1-tax), netEarn=earnAdj*(1-tax);
+      var total=netCash+netNote+netEarn;
+
+      $('dsOutHeadline').textContent=money(price);
+      $('dsOutReal').textContent=money(total);
+      $('dsGrossCash').textContent=money(grossCash);
+      $('dsGrossNote').textContent=money(grossNote);
+      $('dsGrossEarn').textContent=money(grossEarn);
+      $('dsNetCash').textContent=money(netCash);
+      $('dsNetNote').textContent=money(netNote);
+      $('dsNetEarn').textContent=money(netEarn);
+      $('dsTotal').textContent=money(total);
+
+      $('dsNoteDesc').textContent='Paid over '+term+' years at '+rate+'%. Discounted for time, then reduced for default risk.';
+      $('dsEarnDesc').textContent='Contingent on performance after you leave. Weighted at '+prob+'% odds.';
+
+      var t=Math.max(alloc,1);
+      $('dsSegCash').style.flexBasis=(cashP/t*100)+'%';
+      $('dsSegNote').style.flexBasis=(noteP/t*100)+'%';
+      $('dsSegEarn').style.flexBasis=(earnP/t*100)+'%';
+      $('dsSegCash').textContent=cashP>=12?cashP+'%':'';
+      $('dsSegNote').textContent=noteP>=12?noteP+'%':'';
+      $('dsSegEarn').textContent=earnP>=12?earnP+'%':'';
+
+      var gapPct=price>0?Math.round((1-total/price)*100):0;
+      $('dsGap').innerHTML='A <b>'+money(price)+'</b> sale realistically puts <b>'+money(total)+
+        '</b> in your pocket — <b>'+gapPct+'% less</b> than the number on the listing. Every point you move from earnout to cash at close narrows that gap.';
+    }
+
+    ['dsPrice','dsCash','dsNote','dsEarn','dsRate','dsTerm','dsProb','dsTax','dsDisc'].forEach(function(id){
+      var el=$(id);
+      if(!el)return;
+      el.addEventListener('input',dsCalc);
+      el.addEventListener('change',dsCalc);
+    });
+    $('dsPrice').addEventListener('input',function(){priceTouched=true;});
+    $('dsPrice').addEventListener('blur',function(){
+      var n=num(this.value);
+      this.value=n?n.toLocaleString('en-US'):'';
+      dsCalc();
+    });
+
+    // Called by compute() so the readiness calculator drives this section too.
+    window.dsSync=function(v){
+      if(priceTouched)return;
+      $('dsPrice').value=Math.round(num(v)).toLocaleString('en-US');
+      dsCalc();
+    };
+
+    dsCalc();
+  })();
 </script>
 </body>
 </html>
