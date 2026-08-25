@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SBA Lender Index — ExitsIQ</title>
+<meta name="description" content="The top 100 SBA 7(a) lenders ranked by how much of their book actually funds business acquisitions — not by raw loan volume.">
+<link rel="canonical" href="https://exitsiq.com/lenders">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,0,600;9..144,0,700;9..144,1,500;9..144,1,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#11201c;
+    --paper:#f3efe6;
+    --paper-2:#ece6d8;
+    --moss:#2f6b54;
+    --moss-deep:#1d4a3a;
+    --signal:#d8743a;
+    --signal-soft:#e8a878;
+    --line:#cabf9e;
+    --line-dk:#243832;
+    --muted:#5d6862;
+    --gold:#b89a4e;
+    /* tier ramp — sequential acquisition appetite, derived from the house palette */
+    --tier-led:#d8743a;
+    --tier-act:#b89a4e;
+    --tier-inc:#6f8880;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+  .wrap-wide{max-width:1280px;margin:0 auto;padding:0 32px}
+  .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--moss)}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(243,239,230,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:23px;letter-spacing:-.01em}
+  .logo b{color:var(--moss)}
+  a.logo{text-decoration:none;color:inherit;transition:opacity .15s}
+  a.logo:hover{opacity:.68}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
+  .navlinks a:hover{color:var(--moss)}
+  .navlinks a[aria-current="page"]{color:var(--moss);border-bottom:2px solid var(--moss);padding-bottom:2px}
+  .btn{display:inline-block;background:var(--moss);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:2px;border:1px solid var(--moss-deep);transition:background .15s;cursor:pointer}
+  .btn:hover{background:var(--moss-deep)}
+  .navlinks a.btn[aria-current]{border-bottom:1px solid var(--moss-deep);padding-bottom:11px}
+
+  /* HERO */
+  .hero{padding:74px 0 58px;border-bottom:1px solid var(--line)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(40px,5.4vw,68px);line-height:1.0;letter-spacing:-.028em;margin:16px 0 22px;max-width:17ch}
+  .hero h1 em{font-style:italic;color:var(--moss)}
+  .hero p.lede{font-size:17.5px;color:var(--muted);max-width:63ch}
+  .hero p.lede strong{color:var(--ink);font-weight:600}
+
+  /* STAT STRIP */
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(184px,1fr));border-bottom:1px solid var(--line)}
+  .stat{padding:26px 0 28px;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:none}
+  .stat-n{font-family:'Fraunces',serif;font-weight:600;font-size:34px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat-n small{font-size:18px;color:var(--muted);font-weight:500}
+  .stat-l{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:10px;line-height:1.6}
+  .strip .stat{padding-left:24px}
+  .strip .stat:first-child{padding-left:0}
+
+  /* ALERT */
+  .alert{background:var(--paper-2);border-bottom:1px solid var(--line);padding:24px 0}
+  .alert-in{display:flex;gap:18px;align-items:flex-start}
+  .alert-tag{flex:none;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--signal);padding:5px 9px;border-radius:2px;margin-top:3px}
+  .alert-b{font-size:14.5px;line-height:1.62;color:var(--muted);max-width:90ch}
+  .alert-b b{color:var(--ink);font-weight:600}
+
+  /* SECTION SHELL */
+  section{padding:74px 0;border-bottom:1px solid var(--line)}
+  .sec-head{max-width:700px;margin-bottom:36px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,3.4vw,42px);line-height:1.06;letter-spacing:-.015em;margin:14px 0 16px}
+  .sec-head h2 em{font-style:italic;color:var(--moss)}
+  .sec-head p{font-size:16.5px;color:var(--muted)}
+
+  /* PLOT (dark section, matching .graph-sec) */
+  .plot-sec{background:var(--ink);color:var(--paper);border:none;padding:66px 0}
+  .plot-sec .eyebrow{color:var(--signal-soft)}
+  .plot-sec h2{color:var(--paper)}
+  .plot-sec .sec-head p{color:#aab9b2}
+  .plotwrap{width:100%;overflow-x:auto}
+  #scatter{display:block;width:100%;min-width:660px;height:auto}
+  #scatter text{font-family:'IBM Plex Mono',monospace}
+  .q-note{font-size:10.5px;fill:#7d8e87;letter-spacing:.04em}
+  .pt{cursor:pointer}
+  .pt:hover{stroke:var(--paper);stroke-width:1.5}
+  .plot-legend{display:flex;flex-wrap:wrap;gap:24px;padding-top:18px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#aab9b2;letter-spacing:.03em}
+  .plot-legend span{display:inline-flex;align-items:center;gap:8px}
+  .dotk{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  /* CONTROLS */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:68px;background:var(--paper);z-index:20}
+  .search{flex:1 1 210px;min-width:170px;font-family:'IBM Plex Mono',monospace;font-size:13px;padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--paper);color:var(--ink)}
+  .search:focus{outline:none;border-color:var(--moss);box-shadow:0 0 0 2px rgba(47,107,84,.18)}
+  .seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .seg button{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:10px 13px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--moss);color:#fff}
+  .seg button:focus-visible{outline:2px solid var(--moss);outline-offset:-2px}
+  .count{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);letter-spacing:.06em;margin-left:auto;white-space:nowrap}
+
+  /* TABLE */
+  .tablewrap{overflow-x:visible}
+  table{width:100%;border-collapse:separate;border-spacing:0;min-width:960px}
+  thead th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:400;text-align:right;padding:16px 11px 12px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:125px;background:var(--paper);z-index:10}
+  thead th:first-child,thead th.l{text-align:left}
+  thead th:hover{color:var(--ink)}
+  thead th[aria-sort]{color:var(--moss)}
+  thead th .ar{opacity:.6;font-size:9px}
+  tbody tr{cursor:pointer}
+  tbody tr:hover td{background:var(--paper-2)}
+  tbody tr.open td{background:var(--paper-2)}
+  td{border-bottom:1px solid var(--line);padding:13px 11px;font-size:13px;text-align:right;font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+  td.l{text-align:left;font-family:'Inter',sans-serif;color:var(--ink);white-space:normal;min-width:215px}
+  td.rank{color:var(--muted);font-size:11.5px;width:46px}
+  .lname{font-weight:600;font-size:14.5px;letter-spacing:-.005em;line-height:1.3}
+  .lhq{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.04em;margin-top:3px}
+  .score{display:flex;align-items:center;justify-content:flex-end;gap:9px}
+  .score-n{font-size:14px;font-weight:500;color:var(--ink);width:26px;text-align:right}
+  .score-b{width:56px;height:5px;background:var(--line);border-radius:3px;overflow:hidden;flex:none}
+  .score-b i{display:block;height:100%;border-radius:3px}
+  .sh b{font-weight:600;color:var(--ink)}
+  .na{color:#9aa39d;font-size:11px;letter-spacing:.05em}
+
+  /* DETAIL DRAWER */
+  tr.detail>td{padding:0;border-bottom:1px solid var(--line);background:var(--paper-2)}
+  .dt{padding:8px 11px 32px;display:grid;gap:28px;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);font-family:'Inter',sans-serif;text-align:left;white-space:normal}
+  .dt h4{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;font-weight:400}
+  .dt p{font-size:14px;line-height:1.65;color:var(--muted);max-width:66ch}
+  .dt p b{color:var(--ink);font-weight:600}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 8px;border-radius:2px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+  .tag.warn{color:#b85a26;border-color:var(--signal)}
+  .tag.gd{color:var(--moss-deep);border-color:var(--moss)}
+  .math{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);line-height:2}
+  .math div{display:flex;justify-content:space-between;gap:14px}
+  .math .tot{border-top:1px solid var(--line);margin-top:8px;padding-top:8px;color:var(--ink)}
+  .math b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+  .math .noteblk{display:block;color:var(--muted);line-height:1.6;padding-top:6px}
+
+  /* METHOD */
+  .method{background:var(--paper-2)}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:34px}
+  .mgrid h3{font-size:15px;font-weight:600;margin-bottom:9px;letter-spacing:-.005em}
+  .mgrid p{font-size:14px;line-height:1.66;color:var(--muted)}
+  .mgrid code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--moss-deep);background:var(--paper);padding:1px 5px;border-radius:2px;border:1px solid var(--line)}
+  .caveat{margin-top:34px;padding-top:24px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.7;color:var(--muted);max-width:84ch}
+  .caveat b{color:var(--ink);font-weight:600}
+  .srcs{margin-top:20px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:2;color:var(--muted);letter-spacing:.02em}
+  .srcs a{color:var(--moss);text-decoration:none;border-bottom:1px solid var(--line)}
+  .srcs a:hover{border-color:var(--moss)}
+
+  /* FINAL */
+  .final{background:var(--paper-2);text-align:center;padding:88px 0;border-bottom:none}
+  .final h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(34px,4.6vw,56px);line-height:1.03;letter-spacing:-.025em;max-width:19ch;margin:0 auto 20px}
+  .final h2 em{font-style:italic;color:var(--moss)}
+  .final p{font-size:17.5px;color:var(--muted);max-width:540px;margin:0 auto 32px}
+
+  footer{background:var(--ink);color:#8fa39b;padding:46px 0;font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  footer .logo{color:var(--paper)}
+  footer .logo b{color:var(--signal-soft)}
+  footer a{color:#8fa39b;text-decoration:none;margin-left:20px}
+  footer a:hover{color:var(--paper)}
+
+  @media(max-width:1080px){
+    .tablewrap{overflow-x:auto}
+    .controls{position:static}
+    thead th{position:static}
+  }
+  @media(max-width:900px){
+    .navlinks{display:none}
+    .dt{grid-template-columns:1fr;gap:22px}
+    .strip .stat{padding-left:0;border-right:none;border-bottom:1px solid var(--line)}
+  }
+  @media(max-width:560px){.wrap,.wrap-wide{padding:0 22px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ExitsIQ home">Exits<b>IQ</b></a>
+    <div class="navlinks">
+      <a href="/#signals">Signal Engine</a>
+      <a href="/#cxo">AI Exit Officer</a>
+      <a href="/#timeline">Exit Timeline</a>
+      <a href="/#structure">Deal Structure</a>
+      <a href="/lenders" aria-current="page">Lender Index</a>
+      <a href="/#start" class="btn">Get my readiness score</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Lender Intelligence</p>
+    <h1>Every lender says they do acquisitions. <em>Forty-two actually do.</em></h1>
+    <p class="lede">Volume league tables tell you who wrote the most SBA paper. They do not tell you who will fund <strong>your</strong> change-of-ownership deal. Northeast Bank ranked <strong>4th in the country</strong> by 7(a) dollars last year &mdash; and does not list business acquisition as a loan purpose at all. Its average loan was $168,000. This index separates the two questions and scores lenders on the one that matters when you are the seller.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="strip">
+    <div class="stat"><div class="stat-n">$8.25<small>B</small></div><div class="stat-l">Acquisition lending<br>CY2025</div></div>
+    <div class="stat"><div class="stat-n">6,936</div><div class="stat-l">Change-of-ownership<br>loans approved</div></div>
+    <div class="stat"><div class="stat-n">$1.19<small>M</small></div><div class="stat-l">Average<br>acquisition ticket</div></div>
+    <div class="stat"><div class="stat-n">74.8<small>%</small></div><div class="stat-l">Funded by an<br>out-of-state lender</div></div>
+    <div class="stat"><div class="stat-n">530</div><div class="stat-l">Active acquisition banks<br>down from 550</div></div>
+  </div>
+</div>
+
+<div class="alert">
+  <div class="wrap alert-in">
+    <span class="alert-tag">Oct 1</span>
+    <p class="alert-b"><b>SOP 50 10 8.1 takes effect October 1, 2026</b> and resets what &ldquo;aggressive&rdquo; means. DSCR on acquisitions and owner buyouts rises from 1.15&times; to <b>1.25&times;</b>, projections can no longer cure a historical shortfall, a <b>lender-commissioned Quality of Earnings report becomes mandatory at purchase prices of $3M or more</b>, the acquisition portion of the loan is capped at 10-year amortization with no balloon, and minority-investor equity moves into a &ldquo;limited sources&rdquo; bucket capped at half the required injection. Deals that pencil today may not pencil in October. Rankings below reflect approvals under the current regime.</p>
+  </div>
+</div>
+
+<section class="plot-sec">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <p class="eyebrow">Size vs. appetite</p>
+      <h2>The big lenders are <em>not</em> the acquisition lenders</h2>
+      <p>Horizontal: total 7(a) volume. Vertical: share of that book spent on change-of-ownership. Dot size scales with acquisition dollars. Click any dot to open its row. The 43 lenders with no published acquisition breakout are omitted here and listed in the table.</p>
+    </div>
+    <div class="plotwrap"><svg id="scatter" viewBox="0 0 1000 430" role="img" aria-label="Scatter plot comparing each SBA lender's total 7(a) volume against the share of its book funding business acquisitions"></svg></div>
+    <div class="plot-legend">
+      <span><i class="dotk" style="background:#d8743a"></i> Acquisition-led &mdash; 40%+ of book</span>
+      <span><i class="dotk" style="background:#b89a4e"></i> Active &mdash; 15&ndash;40%</span>
+      <span><i class="dotk" style="background:#6f8880"></i> Incidental &mdash; under 15%</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <p class="eyebrow">The Index</p>
+      <h2>Ranked by <em>aggressiveness</em>, not by size</h2>
+      <p>Click any lender to open its scoring math, structure notes, and the caveats attached to its data. Sort by any column.</p>
+    </div>
+
+    <div class="controls">
+      <input class="search" id="q" type="search" placeholder="Search lender or state..." aria-label="Search lenders">
+      <div class="seg" role="group" aria-label="Filter by tier">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="led" aria-pressed="false">Acquisition-led</button>
+        <button data-f="active" aria-pressed="false">Active</button>
+        <button data-f="eta" aria-pressed="false">ETA desk</button>
+        <button data-f="avoid" aria-pressed="false">Volume traps</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="tablewrap">
+      <table id="tbl">
+        <thead><tr>
+          <th class="l" data-k="agg" data-dir="desc">Rank</th>
+          <th class="l" data-k="n">Lender <span class="ar"></span></th>
+          <th data-k="agg">Aggressiveness <span class="ar"></span></th>
+          <th data-k="share">Acq. share <span class="ar"></span></th>
+          <th data-k="av">Acq. volume <span class="ar"></span></th>
+          <th data-k="al">Acq. loans <span class="ar"></span></th>
+          <th data-k="tk">Avg ticket <span class="ar"></span></th>
+          <th data-k="v">Total 7(a) <span class="ar"></span></th>
+          <th data-k="l">Loans <span class="ar"></span></th>
+          <th data-k="rate">Avg rate <span class="ar"></span></th>
+        </tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="method">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Methodology</p>
+      <h2>Two inputs. <em>Both auditable.</em></h2>
+      <p>The score is deliberately simple so that any figure on this page can be traced back to a published approval record. Nothing qualitative is folded into the number.</p>
+    </div>
+
+    <div class="mgrid">
+      <div>
+        <h3>Commitment &mdash; 55 points</h3>
+        <p>Acquisition dollars as a share of the lender's total 7(a) dollars. <code>min(share / 55, 1) &times; 55</code>. A bank that puts most of its book into change-of-ownership deals has built the underwriting muscle for them. The scale tops out at a 55% share, so the most concentrated lenders are not rewarded infinitely for being small.</p>
+      </div>
+      <div>
+        <h3>Depth &mdash; 45 points</h3>
+        <p>Absolute acquisition volume, log-scaled between $8M and $900M. <code>(log&#8321;&#8320;(av) &minus; log&#8321;&#8320;(8)) / (log&#8321;&#8320;(900) &minus; log&#8321;&#8320;(8)) &times; 45</code>. Concentration alone is cheap &mdash; a lender doing four acquisition deals a year at 100% of its book has no process. Depth is the counterweight.</p>
+      </div>
+      <div>
+        <h3>What is deliberately excluded</h3>
+        <p>Equity-injection overlays, seller-note posture, and time-to-close are the three things buyers most want ranked, and no lender in the top 100 publishes any of them. Rather than invent numbers, those appear as sourced notes on each lender and never touch the score.</p>
+      </div>
+      <div>
+        <h3>Reading the tiers</h3>
+        <p><b>Acquisition-led</b> is a 40%+ share. <b>Active</b> is 15&ndash;40%. <b>Incidental</b> is under 15% &mdash; these lenders will quote you, but you are not their business. <b>Volume traps</b> are large lenders by size whose acquisition share is negligible.</p>
+      </div>
+    </div>
+
+    <p class="caveat"><b>Data provenance and its limits.</b> Total 7(a) volume, loan counts, and average rates are FY2025 approvals (Oct 1, 2024 &ndash; Sep 30, 2025). The acquisition cut is CY2025, filtered on the SBA FOIA <code>BusinessAge = "Change of Ownership"</code> flag. The two windows do not align perfectly, so a share figure near a tier boundary should be read as approximate. More importantly, the four public re-publishers of this FOIA extract <b>do not reconcile with each other</b> &mdash; reported market totals range from 3,743 to 7,003 loans and $4.33B to $8.29B for what is nominally the same filter, because none publishes a reproducible query. Rank order is consistent across sources and is trustworthy; <b>absolute counts are not, and no single lender-level integer on this page should be quoted in isolation.</b> Figures here follow the largest consistent extract. Two lenders in the top 100 have since changed status: <b>BayFirst National Bank exited SBA 7(a) entirely</b> in September 2025, selling $103M of balances to Banesco USA, and <b>Brookline Bank became Beacon Bank</b> following the Berkshire Hills merger, with SBA still originated through its 44 Business Capital division. Neither is reflected in FY2025 approval data. This page is market intelligence, not a recommendation, a credit opinion, or financial advice.</p>
+
+    <div class="srcs">
+      Sources &mdash;
+      <a href="https://data.sba.gov/dataset/7-a-504-foia" rel="noopener">SBA 7(a) &amp; 504 FOIA</a> &middot;
+      <a href="https://gosbaloans.com/guide/best-sba-lenders-business-acquisitions/" rel="noopener">GoSBA acquisition cut</a> &middot;
+      <a href="https://www.versquare.com/content/providers/top-providers/top-20-sba-acquisition-lenders" rel="noopener">VerSquare</a> &middot;
+      <a href="https://ebitcommunity.com/p/sba-acquisition-market-pulse-q4-2025" rel="noopener">EBIT Market Pulse Q4 2025</a> &middot;
+      <a href="https://legacy.sba.gov/document/information-notice-5000-880695-issuance-sop-50-10-81" rel="noopener">SBA Notice 5000-880695</a> &middot;
+      <a href="https://www.pilieromazza.com/five-sba-7a-changes-that-could-reshape-business-acquisitions/" rel="noopener">PilieroMazza</a> &middot;
+      <a href="https://starfieldsmith.com/2025/05/best-practices-a-review-of-equity-injection-requirements-under-sop-50-10-8/" rel="noopener">Starfield &amp; Smith</a>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <p class="eyebrow">ExitsIQ</p>
+    <h2>The lender list matters <em>years before</em> you sell</h2>
+    <p>Which lenders will fund a buyer for your business is a function of your numbers, not your broker. ExitsIQ tracks the ten signals that move that answer.</p>
+    <a href="/#start" class="btn">Get my readiness score</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ExitsIQ home" style="margin-left:0">Exits<b>IQ</b></a>
+    <div>
+      <a href="/#signals">Signals</a>
+      <a href="/#cxo">AI Exit Officer</a>
+      <a href="/#timeline">Timeline</a>
+      <a href="/#structure">Deal Structure</a>
+      <a href="/#graph">The Graph</a>
+      <a href="/lenders">Lender Index</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* v = total 7(a) $M FY2025 | l = loans | rate = avg | av = acquisition $M CY2025 | al = acq loans */
+const D=[
+{r:1,n:"Live Oak Banking Company",hq:"Wilmington, NC",l:2280,v:2852.7,rate:9.34,av:896.4,al:679,tags:["eta"],note:"The deepest acquisition book in the country and a dedicated Search Fund Lending desk &mdash; the only lender with named, public search-fund leadership. The tradeoff is the highest documented credit bar in the market: its own search-fund director has stated Live Oak underwrites to a <b>1.5&times; DSCR against competitors' 1.1&ndash;1.2&times;</b>. Deep verticals in veterinary, dental, self-storage and child care. EBIT puts it at 8.61% average acquisition rate with a 1.93% default rate &mdash; top volume and near-lowest pricing at once.",flags:[["gd","Search fund desk"],["","1.5&times; DSCR overlay"],["","44 states"],["","Vet / dental / self-storage"]]},
+{r:2,n:"The Huntington National Bank",hq:"Columbus, OH",l:6998,v:2085.9,rate:9.75,av:591.0,al:761,tags:["eta"],note:"Highest acquisition loan <b>count</b> in the country, at roughly half Live Oak's average ticket &mdash; this is where sub-$800K deals actually get done. Number one 7(a) lender by units for seven consecutive years, and number one in nine footprint states. Notably, 39% of its acquisition loans carried fixed rates, which is unusual among peers and worth asking for. One searcher publicly reported 73 days LOI-to-close with the bank not the limiting factor.",flags:[["gd","Small-ticket friendly"],["","39% fixed-rate"],["","40 states"],["","ETA outreach, no formal desk"]]},
+{r:3,n:"Newtek Bank, National Association",hq:"Boca Raton, FL",l:4828,v:2029.9,rate:11.10,av:47.5,al:62,tags:["avoid"],note:"A top-three 7(a) lender that is <b>not an acquisition lender</b> &mdash; change-of-ownership is 2% of its book. The widely-cited 'seven day' close applies to a term loan product capped at $350K aimed at merchant-cash-advance refinancing, not acquisitions. Highest average rate among the majors at 11.1%, and 4,827 of 4,828 loans were variable-rate, meaning no fixed-rate option. Originate-to-sell model with three securitizations since 2021.",flags:[["warn","Volume trap"],["warn","100% variable rate"],["","Originate-to-sell"]]},
+{r:4,n:"Northeast Bank",hq:"Portland, ME",l:7815,v:1316.5,rate:10.93,av:0,al:0,tags:["avoid"],note:"The single clearest case for why volume rankings mislead. Fourth in the country by 7(a) dollars, and <b>its own website does not list business acquisition among its loan purposes</b> &mdash; it names working capital to $350K, owner-occupied real estate, refinances, expansions and renovations. That is the verifiable part, straight from the bank. Separately, the FOIA re-publisher used throughout this index reports zero change-of-ownership loans for CY2025; that figure comes from a single non-authoritative source and should be read as 'negligible,' not as a confirmed count. The volume is manufactured through the Newity fintech partnership at a $168K average loan. Volume fell 55% in June 2025 after the new underwriting standards landed.",flags:[["warn","Zero acquisition loans"],["warn","Volume trap"],["","$168K average loan"]]},
+{r:5,n:"Readycap Lending, LLC",hq:"Berkeley Heights, NJ",l:3137,v:1170.4,rate:12.18,av:170.1,al:78,tags:[],note:"The largest non-bank 7(a) lender, funded through securitization rather than deposits. Acquisitions are a modest slice of a very large book, but the tickets are big &mdash; a $1.97M median, the highest of any high-volume lender. The <b>$350,000 minimum loan size</b> is the highest published floor in the top 20 and disqualifies small deals outright. Lowest acquisition default rate found anywhere at 0.73%. Service reputation is the weak point: 1 of 5 stars across BBB reviews citing SBA communication and delays.",flags:[["","$350K minimum"],["gd","0.73% default"],["warn","Service complaints"],["","Pacific NW concentration"]]},
+{r:6,n:"U.S. Bank, National Association",hq:"Minneapolis, MN",l:3453,v:871.2,rate:10.12,av:57.6,al:65,tags:["avoid"],note:"Prices acquisitions more sharply than anyone &mdash; <b>P+0.88%, the lowest spread in the top 20</b> &mdash; but writes only 48 to 65 acquisition loans a year against a 3,400-loan book, so there is little process depth behind the quote. Carries the highest acquisition default rate in VerSquare's set at 2.48% and a 76.9% loss-given-default. Worth a call for pricing; not a lender to build a deal timeline around.",flags:[["gd","Lowest spread P+0.88%"],["warn","Volume trap"],["warn","2.48% default"]]},
+{r:7,n:"First Internet Bank of Indiana",hq:"Fishers, IN",l:487,v:712.3,rate:10.13,av:372.5,al:264,tags:["eta"],note:"The most acquisition-concentrated lender of real scale &mdash; over half its entire book is change-of-ownership, at a $1.41M average ticket and the largest median in the market at $1.63M. Its SBA lead sits on the national ETA conference debt panel and has stated the bank wants <b>$3&ndash;5M transactions</b>, requires the full 10% against total project cost rather than purchase price, and prefers seller notes structured as two years standby then eight-year amortization, rejecting anything under six years. Heavy in home services and trades. One caution: reported acquisition default rates vary wildly by source, from 1.88% to 6.28%, and neither is verifiable.",flags:[["gd","54% acquisition book"],["gd","ETA panel presence"],["","$3&ndash;5M sweet spot"],["warn","Default rate disputed"]]},
+{r:8,n:"Celtic Bank Corporation",hq:"Salt Lake City, UT",l:1482,v:592.9,rate:10.55,av:115.5,al:82,tags:[],note:"Markets acquisitions on <b>as little as 10% down</b>, explicitly contrasting itself against competitors it says want up to 30%. Acquisitions run at a $1.41M average against a $400K book-wide average, so these are its larger deals. PLP authority means in-house approval. California is 26% of its acquisition portfolio. Terms marketed at up to 25 years with no balloon and a three-year prepayment penalty. No searcher-facing product and no community reputation signal either way.",flags:[["gd","Markets 10% down"],["","No balloon, 25yr"],["","CA-concentrated"]]},
+{r:9,n:"JPMorgan Chase Bank, N.A.",hq:"New York, NY",l:1914,v:590.5,rate:11.12,av:1.3,al:2,tags:["avoid"],note:"Reported at <b>two</b> change-of-ownership loans in CY2025 &mdash; a single-source figure, so read it as 'negligible' rather than an exact count. Ninety-one percent of the book is existing-business lending with no vertical specialization, and Chase appears in no published acquisition-lender ranking. Rate runs 0.8 points above the national average and the process is branch-based. Realistically an option only if you are already a Chase Business Banking client and the relationship outweighs everything else.",flags:[["warn","2 acquisition loans"],["warn","Volume trap"],["","Branch-based process"]]},
+{r:10,n:"Byline Bank",hq:"Chicago, IL",l:505,v:561.1,rate:10.28,av:210.7,al:170,tags:["eta"],note:"The most explicit ETA positioning of any bank on this list &mdash; a dedicated self-funded search acquisition product, and an SBA lead who has done search deals exclusively for five years. The only lender in the top 100 publishing a close commitment: <b>term sheet in 24&ndash;48 hours, closing targeted within 50 days</b>. Markets flexible equity and seller-note terms without publishing specifics. A genuine insurance-agency and brokerage specialty. The cost is price &mdash; P+2.75% and the highest average rate among the acquisition-focused set.",flags:[["gd","Search fund product"],["gd","50-day close target"],["warn","P+2.75%"],["","Insurance agency niche"]]},
+{r:11,n:"GBank",hq:"Las Vegas, NV",l:205,v:552.4,rate:8.90,av:286.3,al:99,tags:[],note:"Roughly half the book is change-of-ownership at a <b>$2.89M average ticket &mdash; the largest in the market</b>, and it prices at 8.90%, well under the national average. The critical qualifier: <b>88% of its portfolio is hotels and motels</b>, with franchise depth in Quality Inn, Super 8 and Days Inn. If you are selling a hospitality asset this is arguably the sharpest lender in the country. If you are not, the concentration is a poor fit. No ETA or searcher presence.",flags:[["gd","$2.89M avg ticket"],["warn","88% hotel/motel"],["","42 states"],["gd","8.90% avg rate"]]},
+{r:12,n:"Wells Fargo Bank, N.A.",hq:"San Francisco, CA",l:1607,v:539.1,rate:11.13,av:8.9,al:null,tags:["avoid"],note:"Markets 7(a) as ideal for <b>business acquisitions and buy-outs</b> in its own copy while change-of-ownership runs at 2% of the book. The gap between the marketing and the approval data is the finding. Average loan $335K, concentrated in child care, dental and restaurants.",flags:[["warn","Marketing vs. data gap"],["warn","Volume trap"]]},
+{r:13,n:"Bank of America, N.A.",hq:"Charlotte, NC",l:908,v:521.9,rate:7.83,av:34.5,al:null,tags:[],note:"The lowest average rate in the top 20 at 7.83%, with acquisitions at roughly 4% to 7% of the book depending on the extract window. Strong in dental and child care. No searcher-facing product and no acquisition-specific marketing found; SBA appears to be a lower priority within the platform.",flags:[["gd","7.83% avg rate"],["","Dental / child care"]]},
+{r:14,n:"TD Bank, N.A.",hq:"Cherry Hill, NJ",l:3424,v:495.2,rate:10.61,av:12.1,al:11,tags:["avoid"],note:"Lists <b>business acquisitions and partner buyouts</b> among its named strengths and approved eleven acquisition loans on a 2,900-loan book. A $144K average loan makes this a high-volume small-ticket SBA Express operation. Number one in 7(a) units across eight East Coast markets, which is real &mdash; just not for change-of-ownership.",flags:[["warn","Marketing vs. data gap"],["warn","Volume trap"],["","$144K average loan"]]},
+{r:15,n:"Harvest Small Business Finance, LLC",hq:"Laguna Hills, CA",l:472,v:446.0,rate:10.15,av:20.5,al:11,tags:[],note:"Structurally a commercial real-estate lender &mdash; over $3B in CRE since 2016, and all five of its securitizations are of owner-occupied first-lien 7(a) unguaranteed portions. Change-of-ownership is 5% of the book. Restaurants, auto repair and hotels dominate.",flags:[["","CRE-first non-bank"],["","5% acquisition"]]},
+{r:16,n:"First Bank of the Lake",hq:"Osage Beach, MO",l:643,v:433.8,rate:10.88,av:47.6,al:36,tags:["eta"],note:"Runs a dedicated <b>Search Fund / ETA page</b> and is one of only two banks on this list with a searcher-facing product &mdash; but acquisitions are only 11% of the book, against 49% startup and new-business lending. Practitioner commentary describes it as a big national player in search that moves through underwriting efficiently and understands search structures, while warning it <b>may apply stricter criteria than other SBA lenders</b>. Child care, limited-service restaurants and fitness dominate the book.",flags:[["gd","Search fund product"],["","11% acquisition"],["warn","Stricter criteria reported"]]},
+{r:17,n:"Cadence Bank",hq:"Tupelo, MS",l:786,v:400.2,rate:10.24,av:82.2,al:null,tags:[],note:"Preferred Lender that states it will <b>consider opportunities in all 50 states</b> despite a Southeast and Texas branch base. Roughly a fifth of the book is change-of-ownership, and it names partner buyouts explicitly. One of the few lenders publishing exclusions: real estate speculation, lending operations, and activities it describes as morally questionable.",flags:[["","All 50 states"],["gd","Publishes exclusions"],["","Partner buyouts named"]]},
+{r:18,n:"Lendistry SBLC, LLC",hq:"Brea, CA",l:1849,v:384.8,rate:12.21,av:8.1,al:null,tags:["avoid"],note:"Ninety-nine percent of the book is existing-business working capital. The only African American-led non-bank SBA lender and SBLC, with a mission-lending posture, a $213K average loan and the highest average rate in the top 20 at 12.21%. Structurally not an acquisition lender.",flags:[["warn","~2% acquisition"],["","Mission / CDFI-adjacent"]]},
+{r:19,n:"United Midwest Savings Bank, N.A.",hq:"Columbus, OH",l:963,v:380.6,rate:10.26,av:85.1,al:90,tags:[],note:"A professional-practice acquisition specialist &mdash; dental, medical, veterinary, insurance agencies, accounting and tax firms, funeral homes. It publishes its own SOP 50 10 8 explainer and states it is <b>already underwriting to the new standards</b>, including the detail that where multiple seller notes exist, only the one applied toward equity injection needs full standby. Minimum loan $150,000.",flags:[["gd","Publishes SOP guidance"],["","$150K minimum"],["","Practice verticals"]]},
+{r:20,n:"Port 51 Lending LLC",hq:"New York, NY",l:226,v:353.9,rate:9.96,av:96.7,al:57,tags:[],note:"Rebranded from Exos Small Business Lending in January 2025 and majority-owned by MassMutual. Lends <b>up to $7.5M including companion loans</b> for owner-occupied real estate &mdash; above the standard 7(a) ceiling. Names business acquisitions and partner buyouts directly. Second-fastest acquisition growth in the market at +91.7% year over year. Hotels are the largest single concentration.",flags:[["gd","+91.7% growth"],["gd","Up to $7.5M"],["","MassMutual-owned"]]},
+{r:21,n:"Bank of Hope",hq:"Los Angeles, CA",l:382,v:306.1,rate:9.38,av:44.4,al:31,tags:[],note:"Korean-American community bank with a convenience-and-gas banking specialty. Acquisitions run around 15% of the book against 46% new-business lending &mdash; sources put the figure between 14% and 17% depending on extract window, so it sits right on the tier boundary. Hotels and restaurants dominate; concentrated in California, Texas and New York.",flags:[["","C-store / gas specialty"],["","CA / TX / NY"]]},
+{r:22,n:"BayFirst National Bank",hq:"St. Petersburg, FL",l:1895,v:301.6,rate:12.23,av:33.0,al:50,tags:["avoid"],note:"<b>Exited SBA 7(a) lending entirely in September 2025</b>, selling $103M of balances to Banesco USA at 97% of retained balances and moving the majority of its SBA staff there. Historically a small-ticket, high-rate book at a $159K average and 12.23% &mdash; never an acquisition shop. Listed for completeness; route nothing here. Banesco USA is where that team now sits.",flags:[["warn","Exited SBA 7(a)"],["","Team moved to Banesco USA"]]},
+{r:23,n:"Manufacturers and Traders Trust (M&amp;T)",hq:"Buffalo, NY",l:2701,v:293.9,rate:11.53,av:46.2,al:90,tags:[],note:"An SBA Express and small-loan machine at a <b>$109K average loan across 2,701 loans</b>, with acquisitions a small but real slice averaging roughly $500K &mdash; the smallest average acquisition ticket in the top 50, which makes it genuinely relevant for sub-$750K deals. Top-ten national 7(a) lender for seventeen consecutive years and number one in seven districts across the Northeast and Mid-Atlantic.",flags:[["gd","Smallest acq ticket"],["","Northeast footprint"],["","17yr top-ten"]]},
+{r:24,n:"Enterprise Bank &amp; Trust",hq:"Clayton, MO",l:167,v:282.0,rate:8.30,av:0,al:0,tags:["avoid"],note:"Its own SBA page names <b>business acquisitions and change of ownership</b> as core uses; CY2025 approvals show zero change-of-ownership loans. Publishes the most aggressive timeline claims found anywhere &mdash; approval in as little as 48 hours, funding in 30 days &mdash; and lends $100,000 to $6.25M across 44 states at the lowest variable pricing in its cohort. The marketing and the data are irreconcilable; confirm directly before relying on it.",flags:[["warn","Marketing vs. data conflict"],["gd","48hr approval claim"],["warn","4.2% lifetime default"]]},
+{r:25,n:"US Metro Bank",hq:"Garden Grove, CA",l:135,v:276.9,rate:9.02,av:108.8,al:53,tags:[],note:"A $2.1M average ticket and roughly 39% of the book in change-of-ownership, at the <b>lowest acquisition rate EBIT recorded in Q4 2025 at 8.34%</b> &mdash; 148 basis points inside the most expensive lender, worth roughly $100K on a $1M ten-year loan. The qualifier is concentration: hotels and motels are about 55% of volume, and it lends in roughly 15 states.",flags:[["gd","8.34% acq rate"],["warn","~55% hotel/motel"],["","15 states"]]},
+{r:26,n:"Brookline Bank / 44 Business Capital",hq:"Boston, MA",l:255,v:269.1,rate:9.68,av:172.6,al:90,tags:[],note:"The most acquisition-weighted bank of real size on this list &mdash; roughly <b>64% of the book is change-of-ownership</b>, originated through its 44 Business Capital division, which lends <b>$500K to $5M SBA and up to $10M with a conventional companion</b>. Note the identity change: Brookline Bancorp and Berkshire Hills merged in September 2025 to form Beacon Financial, with a full rebrand to <b>Beacon Bank</b> in Q1 2026. Expect to encounter this lender under the new name.",flags:[["gd","64% acquisition book"],["gd","Up to $10M combined"],["warn","Now Beacon Bank"],["","$500K minimum"]]},
+{r:27,n:"Pathward, N.A.",hq:"Sioux Falls, SD",l:126,v:260.6,rate:9.91,av:135.2,al:58,tags:[],note:"The most under-marketed acquisition lender in the country. Roughly <b>52% of its book is change-of-ownership at a $2.33M average ticket</b>, and its own website does not advertise SBA acquisition lending at all &mdash; it appears only as a line item inside Structured Finance. Unlike the other high-concentration lenders it is <b>not hotel-dependent</b>: durable-goods wholesale, computer systems design, HVAC and auto repair lead the book.",flags:[["gd","52% acquisition"],["gd","Not hotel-concentrated"],["","$2.33M avg ticket"],["","Low public profile"]]},
+{r:28,n:"Zions Bank",hq:"Salt Lake City, UT",l:1217,v:239.5,rate:10.35,av:47.0,al:53,tags:[],note:"About a fifth of the book is change-of-ownership at a $197K average loan overall &mdash; small-ticket. Note that Zions Bancorporation operates several brands on one charter (Amegy, California Bank &amp; Trust, National Bank of Arizona), so lending-state data reads Texas and California ahead of Utah. Treat brand-level figures with care.",flags:[["","Multi-brand charter"],["","Small-ticket book"]]},
+{r:29,n:"KeyBank, N.A.",hq:"Cleveland, OH",l:736,v:225.2,rate:10.53,av:9.8,al:16,tags:[],note:"Its own SBA programs page <b>does not list business acquisition or change of ownership</b> among eligible uses at all &mdash; it names real estate, working capital, equipment, inventory, receivables and debt consolidation. Sixteen acquisition loans confirms the omission is real. Preferred Lender for over twenty years; 39% of the portfolio is startup lending.",flags:[["warn","Acquisition not listed"],["","Startup-heavy 39%"]]},
+{r:30,n:"Open Bank",hq:"Los Angeles, CA",l:130,v:223.3,rate:9.12,av:95.4,al:49,tags:[],note:"Roughly <b>43% of the book in change-of-ownership</b> at a $1.95M average ticket, with dedicated SBA teams in Southern California, Northern California, Texas and Washington state. Hotels and motels are the dominant concentration. Korean-American community bank; claims a national small-business lender award without specifying the year.",flags:[["gd","43% acquisition"],["warn","Hotel-concentrated"],["","4-state SBA teams"]]},
+{r:31,n:"Truliant Federal Credit Union",hq:"Winston-Salem, NC",l:166,v:222.7,rate:10.27,av:124.6,al:93,tags:[],note:"The <b>fastest-growing acquisition lender in the market at +95.1% year over year</b>, and the only credit union operating at this scale in change-of-ownership. Roughly 56% of the book, $1.34M average ticket. Credit union membership requirements apply, which is the friction to check first.",flags:[["gd","+95.1% growth"],["gd","56% acquisition"],["","Membership required"]]},
+{r:32,n:"First Financial Bank",hq:"Cincinnati, OH",l:189,v:218.4,rate:8.72,av:86.6,al:64,tags:[],note:"Roughly 40% of the book in change-of-ownership at a $1.35M average ticket and an 8.72% average rate &mdash; strong pricing for that concentration. Midwest-anchored.",flags:[["gd","8.72% avg rate"],["gd","~40% acquisition"]]},
+{r:33,n:"Community Bank &amp; Trust &mdash; West Georgia",hq:"LaGrange, GA",l:123,v:218.3,rate:10.26,av:34.4,al:null,tags:[],note:"A small Georgia bank punching well above its size in 7(a) &mdash; $218M across 123 loans, a $1.77M average. Acquisition share sits near 16%. Little public detail beyond approval data.",flags:[["","$1.77M avg loan"],["","Thin public data"]]},
+{r:34,n:"Citizens Bank",hq:"Providence, RI",l:307,v:217.2,rate:10.22,av:37.7,al:null,tags:[],note:"Acquisition share around 17% on a $707K average loan. Northeast footprint; no acquisition-specific product or searcher positioning found.",flags:[["","~17% acquisition"]]},
+{r:35,n:"Old National Bank",hq:"Evansville, IN",l:229,v:206.7,rate:8.37,av:87.1,al:73,tags:[],note:"Roughly <b>42% of the book in change-of-ownership</b> at a $1.19M average ticket, and an 8.37% average rate &mdash; among the best pricing of any genuinely acquisition-led lender. Midwest footprint. Materially under-discussed relative to that profile.",flags:[["gd","8.37% avg rate"],["gd","~42% acquisition"],["","Under-discussed"]]},
+{r:36,n:"T Bank, N.A.",hq:"Dallas, TX",l:104,v:189.6,rate:9.68,av:90.1,al:47,tags:[],note:"Roughly <b>48% of the book in change-of-ownership</b> at a $1.92M average ticket &mdash; a small Dallas bank running a concentrated large-ticket acquisition book. Thin public reputation data.",flags:[["gd","~48% acquisition"],["","$1.92M avg ticket"],["","Thin public data"]]},
+{r:37,n:"Pinnacle Bank",hq:"Lincoln, NE",l:160,v:189.2,rate:9.40,av:39.5,al:null,tags:[],note:"Acquisition share around 21%. Described in trade coverage as Plains and Southeast ETA-friendly, though no dedicated searcher product was found on its own site.",flags:[["","~21% acquisition"],["","ETA-adjacent, unconfirmed"]]},
+{r:38,n:"First National Bank of Pennsylvania",hq:"Pittsburgh, PA",l:188,v:184.9,rate:9.32,av:null,al:null,tags:[],note:"No acquisition-cut data published in any of the four FOIA re-publishers reviewed. A $984K average loan across a Mid-Atlantic footprint.",flags:[["","No acquisition data"]]},
+{r:39,n:"VelocitySBA, LLC",hq:"San Diego, CA",l:193,v:181.9,rate:10.28,av:54.3,al:46,tags:[],note:"Non-bank SBLC with roughly 30% of the book in change-of-ownership at a $1.18M average ticket. California-anchored, lends nationally.",flags:[["","~30% acquisition"],["","Non-bank SBLC"]]},
+{r:40,n:"Hanmi Bank",hq:"Los Angeles, CA",l:214,v:181.2,rate:9.28,av:108.1,al:122,tags:[],note:"Roughly <b>60% of the book in change-of-ownership</b> across 122 loans &mdash; a high count at a modest $886K average ticket, which is a genuinely useful combination for mid-size deals. Korean-American community bank with hospitality depth. EBIT records an 8.88% average acquisition rate.",flags:[["gd","~60% acquisition"],["gd","122 acq loans"],["","Hospitality depth"]]},
+{r:41,n:"Fifth Third Bank",hq:"Cincinnati, OH",l:269,v:176.8,rate:9.72,av:null,al:null,tags:[],note:"No acquisition-cut data published. $657K average loan; Midwest and Southeast footprint.",flags:[["","No acquisition data"]]},
+{r:42,n:"Metro City Bank",hq:"Doraville, GA",l:101,v:172.0,rate:8.74,av:89.9,al:44,tags:[],note:"Roughly <b>52% of the book in change-of-ownership</b> at a $2.04M average ticket, priced at 8.74%. A small Georgia bank running large concentrated acquisition deals. Thin public reputation data.",flags:[["gd","~52% acquisition"],["gd","8.74% avg rate"],["","Thin public data"]]},
+{r:43,n:"Northwest Bank",hq:"Warren, PA",l:202,v:172.0,rate:9.88,av:54.4,al:42,tags:["eta"],note:"Small by volume, but carries the <b>strongest practitioner endorsement found in the entire research pass</b>. A widely-read ETA newsletter names its bankers specifically on the grounds of closing probability rather than price &mdash; that they honor term sheets as issued, engage searchers before an LOI is signed, and have a collaborative credit team behind them. The stated thesis: a lender who doesn't close is what breaks your deal. Roughly 32% acquisition book, $1.30M average ticket.",flags:[["gd","Top practitioner pick"],["gd","Honors term sheets"],["","~32% acquisition"]]},
+{r:44,n:"Dogwood State Bank",hq:"Raleigh, NC",l:173,v:162.5,rate:10.08,av:62.9,al:56,tags:[],note:"Roughly 39% of the book in change-of-ownership at a $1.12M average ticket across 56 loans. Carolinas-anchored, lending nationally.",flags:[["gd","~39% acquisition"],["","Carolinas base"]]},
+{r:45,n:"Centerstone SBA Lending, Inc.",hq:"Irvine, CA",l:116,v:160.9,rate:9.55,av:83.8,al:null,tags:[],note:"Roughly <b>52% of the book in change-of-ownership</b> &mdash; a non-bank lender operating almost entirely in acquisition finance. Loan-count detail not published in the sources reviewed.",flags:[["gd","~52% acquisition"],["","Non-bank"]]},
+{r:46,n:"Regions Bank",hq:"Birmingham, AL",l:187,v:158.5,rate:9.13,av:null,al:null,tags:[],note:"No acquisition-cut data published. $847K average loan across a Southeast footprint.",flags:[["","No acquisition data"]]},
+{r:47,n:"PCB Bank",hq:"Los Angeles, CA",l:135,v:154.9,rate:9.12,av:87.4,al:67,tags:[],note:"Roughly <b>56% of the book in change-of-ownership</b> across 67 loans at a $1.31M average ticket &mdash; a strong count-to-size ratio. Korean-American community bank, California-anchored.",flags:[["gd","~56% acquisition"],["","67 acq loans"]]},
+{r:48,n:"The Bancorp Bank, N.A.",hq:"Wilmington, DE",l:123,v:150.4,rate:8.70,av:47.6,al:null,tags:[],note:"Roughly 32% of the book in change-of-ownership at an 8.70% average rate. Primarily a fintech-partnership bank; SBA is a smaller line.",flags:[["","~32% acquisition"],["gd","8.70% avg rate"]]},
+{r:49,n:"United Community Bank",hq:"Greenville, SC",l:167,v:145.4,rate:9.38,av:44.4,al:null,tags:[],note:"Roughly 31% of the book in change-of-ownership. Southeast footprint, $871K average loan.",flags:[["","~31% acquisition"]]},
+{r:50,n:"Gulf Coast Bank and Trust Company",hq:"New Orleans, LA",l:145,v:142.3,rate:10.33,av:38.9,al:null,tags:[],note:"Roughly 27% of the book in change-of-ownership. Gulf South footprint, lends nationally through its SBA division.",flags:[["","~27% acquisition"]]},
+{r:51,n:"Shoreham Bank",hq:"Shoreham, NY",l:153,v:140.9,rate:10.37,av:65.8,al:null,tags:[],note:"Roughly <b>47% of the book in change-of-ownership</b> at a reported $3.14M average acquisition ticket &mdash; the largest average found in the top 50. Very thin public data behind it.",flags:[["gd","~47% acquisition"],["","$3.14M avg ticket"],["warn","Thin public data"]]},
+{r:52,n:"First-Citizens Bank &amp; Trust Company",hq:"Raleigh, NC",l:117,v:138.4,rate:9.70,av:42.2,al:null,tags:[],note:"Roughly 30% of the book in change-of-ownership. National footprint post-SVB acquisition; $1.18M average loan.",flags:[["","~30% acquisition"]]},
+{r:53,n:"Climate First Bank",hq:"St. Petersburg, FL",l:108,v:136.0,rate:9.98,av:null,al:null,tags:[],note:"No acquisition-cut data published. Mission-oriented lender with a clean-energy focus; $1.26M average loan.",flags:[["","No acquisition data"],["","Climate mandate"]]},
+{r:54,n:"Bank Five Nine",hq:"Oconomowoc, WI",l:192,v:135.2,rate:9.42,av:null,al:null,tags:[],note:"No acquisition-cut data published. Wisconsin-anchored community bank; $704K average loan.",flags:[["","No acquisition data"]]},
+{r:55,n:"Commonwealth Business Bank",hq:"Los Angeles, CA",l:116,v:134.1,rate:9.21,av:null,al:null,tags:[],note:"No acquisition-cut data published. Korean-American community bank; $1.16M average loan.",flags:[["","No acquisition data"]]},
+{r:56,n:"First Commonwealth Bank",hq:"Indiana, PA",l:218,v:132.8,rate:9.75,av:null,al:null,tags:[],note:"No acquisition-cut data published. Western Pennsylvania and Ohio footprint.",flags:[["","No acquisition data"]]},
+{r:57,n:"City National Bank",hq:"Los Angeles, CA",l:106,v:131.6,rate:7.10,av:null,al:null,tags:[],note:"The <b>lowest average rate in the entire top 100 at 7.10%</b>. No acquisition-cut data published, so appetite is unknown &mdash; but the pricing alone makes it worth a call on a strong deal.",flags:[["gd","7.10% &mdash; lowest rate"],["","No acquisition data"]]},
+{r:58,n:"Heritage Bank Inc",hq:"Erlanger, KY",l:185,v:130.9,rate:10.84,av:null,al:null,tags:[],note:"No acquisition-cut data published. Kentucky-anchored; $708K average loan.",flags:[["","No acquisition data"]]},
+{r:59,n:"Banc of California",hq:"Santa Ana, CA",l:74,v:129.8,rate:7.70,av:null,al:null,tags:[],note:"Second-lowest average rate in the top 100 at 7.70% on a $1.75M average loan &mdash; a large-ticket, sharply-priced book. No acquisition-cut data published.",flags:[["gd","7.70% avg rate"],["","No acquisition data"]]},
+{r:60,n:"Meridian Bank",hq:"Malvern, PA",l:125,v:128.2,rate:9.81,av:null,al:null,tags:[],note:"No acquisition-cut data published. Mid-Atlantic footprint; $1.03M average loan.",flags:[["","No acquisition data"]]},
+{r:61,n:"Truist Bank",hq:"Charlotte, NC",l:84,v:125.0,rate:8.78,av:null,al:null,tags:[],note:"No acquisition-cut data published. Only 84 SBA loans against a very large commercial balance sheet &mdash; SBA is a minor line here.",flags:[["","No acquisition data"],["","SBA a minor line"]]},
+{r:62,n:"First Savings Bank",hq:"Jeffersonville, IN",l:110,v:124.4,rate:9.99,av:36.3,al:null,tags:[],note:"Roughly 29% of the book in change-of-ownership. Indiana-anchored, lends nationally.",flags:[["","~29% acquisition"]]},
+{r:63,n:"Merchants Bank of Indiana",hq:"Carmel, IN",l:90,v:121.6,rate:9.45,av:50.6,al:null,tags:[],note:"Roughly <b>42% of the book in change-of-ownership</b> at a $1.35M average loan. Small, concentrated, and little-discussed publicly.",flags:[["gd","~42% acquisition"],["","Thin public data"]]},
+{r:64,n:"SouthState Bank, N.A.",hq:"Winter Haven, FL",l:229,v:121.0,rate:9.94,av:null,al:null,tags:[],note:"No acquisition-cut data published. Southeast footprint; $528K average loan.",flags:[["","No acquisition data"]]},
+{r:65,n:"Midwest Regional Bank",hq:"Festus, MO",l:110,v:118.2,rate:10.35,av:55.0,al:null,tags:[],note:"Roughly <b>47% of the book in change-of-ownership</b> at a $1.07M average loan. Missouri-based, lends nationally through its SBA division.",flags:[["gd","~47% acquisition"],["","National SBA division"]]},
+{r:66,n:"Wilmington Savings Fund Society (WSFS)",hq:"Wilmington, DE",l:141,v:117.1,rate:9.81,av:36.0,al:null,tags:[],note:"Roughly 31% of the book in change-of-ownership. Delaware Valley footprint; $830K average loan.",flags:[["","~31% acquisition"]]},
+{r:67,n:"Mission Valley Bank",hq:"Sun Valley, CA",l:68,v:115.8,rate:9.67,av:null,al:null,tags:[],note:"No acquisition-cut data published. A $1.70M average loan on only 68 loans &mdash; large-ticket for its size. Southern California.",flags:[["","No acquisition data"],["","$1.70M avg loan"]]},
+{r:68,n:"East West Bank",hq:"Pasadena, CA",l:179,v:114.9,rate:9.30,av:null,al:null,tags:[],note:"No acquisition-cut data published. Chinese-American community bank with a national commercial platform.",flags:[["","No acquisition data"]]},
+{r:69,n:"Hanover Community Bank",hq:"Mineola, NY",l:111,v:112.7,rate:10.20,av:null,al:null,tags:[],note:"No acquisition-cut data published. New York metro footprint; $1.02M average loan.",flags:[["","No acquisition data"]]},
+{r:70,n:"Wallis Bank",hq:"Wallis, TX",l:107,v:111.3,rate:9.36,av:null,al:null,tags:[],note:"No acquisition-cut data published. Texas-anchored with hospitality concentration; $1.04M average loan.",flags:[["","No acquisition data"]]},
+{r:71,n:"Southwestern National Bank",hq:"Houston, TX",l:67,v:108.3,rate:9.03,av:58.2,al:null,tags:[],note:"Roughly <b>54% of the book in change-of-ownership</b> on only 67 total loans &mdash; one of the most concentrated acquisition books in the country by share, at small absolute scale. Houston-based, Asian-American community bank.",flags:[["gd","~54% acquisition"],["","Small absolute scale"]]},
+{r:72,n:"Comerica Bank",hq:"Dallas, TX",l:166,v:105.3,rate:8.95,av:null,al:null,tags:[],note:"No acquisition-cut data published. $634K average loan; Texas, California and Michigan footprint.",flags:[["","No acquisition data"]]},
+{r:73,n:"America First Federal Credit Union",hq:"Riverdale, UT",l:85,v:102.3,rate:7.77,av:null,al:null,tags:[],note:"Third-lowest average rate in the top 100 at 7.77%. No acquisition-cut data published. Credit union membership requirements apply.",flags:[["gd","7.77% avg rate"],["","Membership required"]]},
+{r:74,n:"Grasshopper Bank, N.A.",hq:"New York, NY",l:201,v:101.2,rate:11.05,av:null,al:null,tags:[],note:"Digital-first bank; no acquisition-cut data published. $503K average loan at an above-average 11.05% rate.",flags:[["","No acquisition data"],["","Digital-first"]]},
+{r:75,n:"Peoples Bank",hq:"Marietta, OH",l:120,v:101.0,rate:9.26,av:null,al:null,tags:[],note:"No acquisition-cut data published. Ohio Valley footprint; $842K average loan.",flags:[["","No acquisition data"]]},
+{r:76,n:"PNC Bank, N.A.",hq:"Pittsburgh, PA",l:341,v:99.9,rate:9.75,av:null,al:null,tags:[],note:"No acquisition-cut data published. A $293K average loan across 341 loans &mdash; small-ticket relative to the bank's overall scale.",flags:[["","No acquisition data"],["","Small-ticket"]]},
+{r:77,n:"First Bank",hq:"Hamilton, NJ",l:107,v:99.2,rate:10.19,av:null,al:null,tags:[],note:"No acquisition-cut data published. New Jersey footprint; $927K average loan.",flags:[["","No acquisition data"]]},
+{r:78,n:"Colony Bank",hq:"Fitzgerald, GA",l:243,v:98.9,rate:10.64,av:37.1,al:null,tags:[],note:"Roughly 38% of the book in change-of-ownership at a $407K average loan overall &mdash; a small-ticket acquisition book, useful for smaller Georgia and Southeast deals.",flags:[["gd","~38% acquisition"],["","Small-ticket"]]},
+{r:79,n:"FinWise Bank",hq:"Murray, UT",l:89,v:97.9,rate:10.25,av:null,al:null,tags:[],note:"No acquisition-cut data published. Fintech-partnership bank; $1.10M average loan.",flags:[["","No acquisition data"]]},
+{r:80,n:"CalPrivate Bank",hq:"La Jolla, CA",l:80,v:96.2,rate:10.27,av:null,al:null,tags:[],note:"No acquisition-cut data published. Southern California private bank; $1.20M average loan.",flags:[["","No acquisition data"]]},
+{r:81,n:"City National Bank of Florida",hq:"Miami, FL",l:133,v:91.7,rate:10.34,av:null,al:null,tags:[],note:"No acquisition-cut data published. Florida footprint; $689K average loan.",flags:[["","No acquisition data"]]},
+{r:82,n:"OakStar Bank",hq:"Springfield, MO",l:140,v:91.2,rate:10.03,av:null,al:null,tags:[],note:"No acquisition-cut data published. Missouri-anchored; $651K average loan.",flags:[["","No acquisition data"]]},
+{r:83,n:"Stone Bank",hq:"Mountain View, AR",l:226,v:87.8,rate:10.32,av:null,al:null,tags:[],note:"No acquisition-cut data published. Arkansas-based with a national agricultural and SBA division; $389K average loan.",flags:[["","No acquisition data"]]},
+{r:84,n:"Global One Bank",hq:"Atlanta, GA",l:37,v:85.6,rate:8.91,av:44.6,al:null,tags:[],note:"Roughly <b>52% of the book in change-of-ownership</b> on just 37 total loans, at a $2.31M average &mdash; the smallest lender on this list running genuinely large acquisition deals. A $2.23M average acquisition ticket.",flags:[["gd","~52% acquisition"],["","$2.31M avg loan"],["","37 loans total"]]},
+{r:85,n:"Columbia Bank",hq:"Tacoma, WA",l:667,v:84.1,rate:12.22,av:null,al:null,tags:[],note:"No acquisition-cut data published. A $126K average loan across 667 loans at 12.22% &mdash; a high-volume, high-rate small-ticket book. Acquired Pacific Premier Bank in October 2025.",flags:[["","No acquisition data"],["","Small-ticket, high rate"]]},
+{r:86,n:"Webster Bank, N.A.",hq:"Stamford, CT",l:208,v:82.3,rate:9.39,av:null,al:null,tags:[],note:"No acquisition-cut data published. New England and New York footprint; $396K average loan.",flags:[["","No acquisition data"]]},
+{r:87,n:"Hancock Whitney Bank",hq:"Gulfport, MS",l:111,v:80.0,rate:9.94,av:null,al:null,tags:[],note:"No acquisition-cut data published. Gulf South footprint; $721K average loan.",flags:[["","No acquisition data"]]},
+{r:88,n:"Mountain America Federal Credit Union",hq:"Sandy, UT",l:259,v:80.0,rate:10.63,av:null,al:null,tags:[],note:"No acquisition-cut data published. Credit union membership requirements apply; $309K average loan.",flags:[["","No acquisition data"],["","Membership required"]]},
+{r:89,n:"Fulton Bank, N.A.",hq:"Lancaster, PA",l:110,v:78.3,rate:9.92,av:null,al:null,tags:[],note:"No acquisition-cut data published. Mid-Atlantic footprint; $712K average loan.",flags:[["","No acquisition data"]]},
+{r:90,n:"Stearns Bank, N.A.",hq:"St. Cloud, MN",l:172,v:76.8,rate:10.33,av:null,al:null,tags:[],note:"No acquisition-cut data published in the FOIA re-publishers reviewed, though trade coverage describes it as equipment-heavy and ETA-friendly &mdash; unverified. $447K average loan.",flags:[["","No acquisition data"],["","ETA-friendly, unverified"]]},
+{r:91,n:"Milestone Bank",hq:"Roswell, GA",l:54,v:76.6,rate:10.10,av:41.9,al:null,tags:[],note:"Roughly <b>55% of the book in change-of-ownership</b> on 54 total loans &mdash; small but almost entirely acquisition-focused. A $1.42M average loan.",flags:[["gd","~55% acquisition"],["","54 loans total"]]},
+{r:92,n:"Banner Bank",hq:"Walla Walla, WA",l:281,v:74.8,rate:9.09,av:null,al:null,tags:[],note:"No acquisition-cut data published. Pacific Northwest footprint; $266K average loan.",flags:[["","No acquisition data"]]},
+{r:93,n:"HomeTrust Bank",hq:"Asheville, NC",l:77,v:74.3,rate:9.92,av:null,al:null,tags:[],note:"No acquisition-cut data published. Carolinas footprint; $965K average loan.",flags:[["","No acquisition data"]]},
+{r:94,n:"Woori America Bank",hq:"New York, NY",l:95,v:74.2,rate:9.25,av:null,al:null,tags:[],note:"No acquisition-cut data published. Korean-American community bank; $781K average loan.",flags:[["","No acquisition data"]]},
+{r:95,n:"FWBank",hq:"Fort Worth, TX",l:71,v:73.5,rate:9.70,av:null,al:null,tags:[],note:"No acquisition-cut data published. Texas footprint; $1.04M average loan.",flags:[["","No acquisition data"]]},
+{r:96,n:"CenTrust Bank",hq:"Northbrook, IL",l:334,v:71.4,rate:11.71,av:null,al:null,tags:[],note:"No acquisition-cut data published. A $214K average loan at 11.71% &mdash; small-ticket, high-rate. Illinois footprint.",flags:[["","No acquisition data"],["","Small-ticket, high rate"]]},
+{r:97,n:"Texas Capital Bank",hq:"Dallas, TX",l:43,v:71.2,rate:6.92,av:null,al:null,tags:[],note:"The <b>lowest average rate anywhere in the top 100 at 6.92%</b>, on a $1.66M average loan across only 43 loans. No acquisition-cut data published, but the pricing is exceptional enough to justify a conversation.",flags:[["gd","6.92% &mdash; lowest rate"],["","No acquisition data"],["","43 loans total"]]},
+{r:98,n:"Synovus Bank",hq:"Columbus, GA",l:49,v:71.1,rate:9.48,av:null,al:null,tags:[],note:"No acquisition-cut data published. Southeast footprint; $1.45M average loan.",flags:[["","No acquisition data"]]},
+{r:99,n:"United Federal Credit Union",hq:"St. Joseph, MI",l:53,v:69.3,rate:9.72,av:null,al:null,tags:[],note:"No acquisition-cut data published. Credit union membership requirements apply; $1.31M average loan.",flags:[["","No acquisition data"],["","Membership required"]]},
+{r:100,n:"Leader Bank, N.A.",hq:"Arlington, MA",l:87,v:68.1,rate:9.86,av:null,al:null,tags:[],note:"No acquisition-cut data published. Massachusetts footprint; $783K average loan.",flags:[["","No acquisition data"]]}
+];
+
+/* ---------- scoring ---------- */
+const LO=Math.log10(8), HI=Math.log10(900);
+D.forEach(d=>{
+  if(d.av===null||d.av===undefined){ d.share=null; d.agg=null; d.cm=null; d.dp=null; d.tk=null; return; }
+  d.share = d.v>0 ? (d.av/d.v)*100 : 0;
+  d.cm = Math.min(d.share/55,1)*55;
+  d.dp = d.av<=0 ? 0 : Math.max(0,Math.min(1,(Math.log10(d.av)-LO)/(HI-LO)))*45;
+  d.agg = d.cm + d.dp;
+  d.tk = (d.al && d.al>0) ? (d.av/d.al) : null;
+});
+
+const tierOf=d=>{
+  if(d.share===null) return {k:"nd",l:"No data",c:"#9aa39d"};
+  if(d.share>=40)   return {k:"led",l:"Acquisition-led",c:"var(--tier-led)"};
+  if(d.share>=15)   return {k:"active",l:"Active",c:"var(--tier-act)"};
+  return {k:"inc",l:"Incidental",c:"var(--tier-inc)"};
+};
+const rampColor=s=>{
+  if(s===null) return "#9aa39d";
+  if(s>=40) return "#d8743a";
+  if(s>=15) return "#b89a4e";
+  return "#6f8880";
+};
+const fmtM=v=>v>=1000?"$"+(v/1000).toFixed(2)+"B":"$"+v.toFixed(1)+"M";
+const fmtK=v=>v===null?null:(v>=1?"$"+v.toFixed(2)+"M":"$"+Math.round(v*1000)+"K");
+
+/* ---------- scatter ---------- */
+(function(){
+  const svg=document.getElementById("scatter");
+  const W=1000,H=430,PL=54,PR=18,PT=16,PB=42;
+  const xmin=Math.log10(60), xmax=Math.log10(3000);
+  const X=v=>PL+((Math.log10(v)-xmin)/(xmax-xmin))*(W-PL-PR);
+  const Y=s=>H-PB-((Math.min(s,70))/70)*(H-PT-PB);
+  let g="";
+
+  [0,15,40,70].forEach(t=>{
+    const y=Y(t);
+    g+=`<line x1="${PL}" y1="${y.toFixed(1)}" x2="${W-PR}" y2="${y.toFixed(1)}" stroke="#243832" stroke-width="1"/>`;
+    g+=`<text x="${PL-10}" y="${(y+4).toFixed(1)}" text-anchor="end" class="q-note">${t}%</text>`;
+  });
+  [100,300,1000,3000].forEach(v=>{
+    const x=X(v);
+    g+=`<line x1="${x.toFixed(1)}" y1="${PT}" x2="${x.toFixed(1)}" y2="${H-PB}" stroke="#1b2b26" stroke-width="1"/>`;
+    g+=`<text x="${x.toFixed(1)}" y="${H-PB+20}" text-anchor="middle" class="q-note">${v>=1000?"$"+v/1000+"B":"$"+v+"M"}</text>`;
+  });
+  g+=`<text x="${PL}" y="${H-6}" class="q-note">Total 7(a) volume, FY2025 &rarr;</text>`;
+  g+=`<text x="${W-PR-18}" y="${Y(15)-10}" text-anchor="end" class="q-note" fill="#546b63">below this line, acquisitions are incidental</text>`;
+
+  D.filter(d=>d.share!==null).forEach(d=>{
+    const s=d.share, x=X(d.v), y=Y(s);
+    const rad = 3.6+Math.sqrt(d.av||1)/5.4;
+    g+=`<circle class="pt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad.toFixed(1)}" fill="${rampColor(s)}" fill-opacity=".85" data-r="${d.r}"><title>${d.n.replace(/&amp;/g,"&")} — ${s.toFixed(0)}% acquisition · ${fmtM(d.av)} of ${fmtM(d.v)}</title></circle>`;
+  });
+
+  const lbl=[
+    ["Live Oak",-11,4,"end"],
+    ["The Huntington",-11,17,"end"],
+    ["First Internet",0,-15,"middle"],
+    ["GBank",0,19,"middle"],
+    ["Byline Bank",12,4,"start"],
+    ["Truliant",0,-15,"middle"],
+    ["Pathward",-10,4,"end"],
+    ["Northeast Bank",0,-14,"middle"],
+    ["JPMorgan Chase",0,-14,"middle"]
+  ];
+  lbl.forEach(([nm,dx,dy,anc])=>{
+    const d=D.find(z=>z.n.indexOf(nm)===0);
+    if(!d||d.share===null)return;
+    g+=`<text x="${(X(d.v)+dx).toFixed(1)}" y="${(Y(d.share)+dy).toFixed(1)}" text-anchor="${anc}" class="q-note" fill="#aab9b2" style="font-size:10px">${nm}</text>`;
+  });
+  svg.innerHTML=g;
+  svg.addEventListener("click",e=>{
+    const c=e.target.closest(".pt"); if(!c)return;
+    const r=+c.getAttribute("data-r");
+    document.getElementById("q").value="";
+    state.q=""; state.f="all"; syncSeg(); render();
+    const row=document.querySelector(`tr[data-r="${r}"]`);
+    if(row){ toggle(row); row.scrollIntoView({block:"center",behavior:"smooth"}); }
+  });
+})();
+
+/* ---------- table ---------- */
+const tb=document.getElementById("tb"), cnt=document.getElementById("count");
+const state={k:"agg",dir:"desc",f:"all",q:""};
+
+function passes(d){
+  if(state.q){
+    const s=(d.n+" "+d.hq).toLowerCase().replace(/&amp;/g,"&");
+    if(s.indexOf(state.q)<0) return false;
+  }
+  const t=tierOf(d).k;
+  if(state.f==="led")    return t==="led";
+  if(state.f==="active") return t==="active";
+  if(state.f==="eta")    return d.tags.includes("eta");
+  if(state.f==="avoid")  return d.tags.includes("avoid");
+  return true;
+}
+function sortRows(rows){
+  const k=state.k, m=state.dir==="desc"?-1:1;
+  return rows.sort((a,b)=>{
+    if(k==="n") return a.n.localeCompare(b.n)*(state.dir==="desc"?-1:1);
+    const av=a[k], bv=b[k];
+    if(av===null||av===undefined) return 1;
+    if(bv===null||bv===undefined) return -1;
+    return (av-bv)*m;
+  });
+}
+function render(){
+  const rows=sortRows(D.filter(passes));
+  cnt.textContent=rows.length+" of 100 lenders";
+  tb.innerHTML=rows.map((d,i)=>{
+    const t=tierOf(d);
+    const sc = d.agg===null
+      ? `<span class="na">no data</span>`
+      : `<span class="score"><span class="score-n">${d.agg.toFixed(0)}</span><span class="score-b"><i style="width:${d.agg.toFixed(0)}%;background:${rampColor(d.share)}"></i></span></span>`;
+    const sh = d.share===null
+      ? `<span class="na">&mdash;</span>`
+      : `<span class="sh"><b>${d.share.toFixed(0)}</b>%</span>`;
+    return `<tr data-r="${d.r}">
+      <td class="l rank">${state.k==="agg"?(i+1):"#"+d.r}</td>
+      <td class="l"><div class="lname">${d.n}</div><div class="lhq">${d.hq} &middot; <span style="color:${t.c}">${t.l}</span></div></td>
+      <td>${sc}</td>
+      <td>${sh}</td>
+      <td>${d.av===null?'<span class="na">&mdash;</span>':fmtM(d.av)}</td>
+      <td>${d.al===null?'<span class="na">&mdash;</span>':d.al.toLocaleString()}</td>
+      <td>${d.tk===null?'<span class="na">&mdash;</span>':fmtK(d.tk)}</td>
+      <td>${fmtM(d.v)}</td>
+      <td>${d.l.toLocaleString()}</td>
+      <td>${d.rate.toFixed(2)}%</td>
+    </tr>`;
+  }).join("");
+}
+function toggle(row){
+  const r=+row.getAttribute("data-r");
+  const nx=row.nextElementSibling;
+  if(nx&&nx.classList.contains("detail")){ nx.remove(); row.classList.remove("open"); return; }
+  document.querySelectorAll("tr.detail").forEach(x=>x.remove());
+  document.querySelectorAll("tr.open").forEach(x=>x.classList.remove("open"));
+  const d=D.find(z=>z.r===r);
+  const math = d.agg===null
+    ? `<div class="math"><div><span>Acquisition data</span><b>not published</b></div><span class="noteblk">None of the four public FOIA re-publishers reviewed break out a change-of-ownership figure for this lender. Absence of data is not evidence of absent appetite &mdash; it means this lender has to be diligenced by phone.</span></div>`
+    : `<div class="math">
+        <div><span>Acquisition share</span><b>${d.share.toFixed(1)}%</b></div>
+        <div><span>Commitment &middot; 55 max</span><b>${d.cm.toFixed(1)}</b></div>
+        <div><span>Depth &middot; 45 max</span><b>${d.dp.toFixed(1)}</b></div>
+        <div class="tot"><span>Aggressiveness</span><b>${d.agg.toFixed(1)} / 100</b></div>
+      </div>`;
+  const tr=document.createElement("tr");
+  tr.className="detail";
+  tr.innerHTML=`<td colspan="10"><div class="dt">
+    <div>
+      <h4>Structure &amp; appetite</h4>
+      <p>${d.note}</p>
+      <div class="tags">${d.flags.map(f=>`<span class="tag ${f[0]}">${f[1]}</span>`).join("")}</div>
+    </div>
+    <div><h4>Score derivation</h4>${math}</div>
+  </div></td>`;
+  row.after(tr);
+  row.classList.add("open");
+}
+
+tb.addEventListener("click",e=>{
+  const row=e.target.closest("tr");
+  if(!row||row.classList.contains("detail"))return;
+  toggle(row);
+});
+document.querySelectorAll("thead th").forEach(th=>{
+  const k=th.getAttribute("data-k"); if(!k)return;
+  th.addEventListener("click",()=>{
+    if(state.k===k){ state.dir=state.dir==="desc"?"asc":"desc"; }
+    else{ state.k=k; state.dir=(k==="n")?"asc":"desc"; }
+    document.querySelectorAll("thead th").forEach(x=>{x.removeAttribute("aria-sort");const a=x.querySelector(".ar");if(a)a.textContent="";});
+    th.setAttribute("aria-sort",state.dir==="desc"?"descending":"ascending");
+    const ar=th.querySelector(".ar"); if(ar) ar.textContent=state.dir==="desc"?"▼":"▲";
+    render();
+  });
+});
+function syncSeg(){
+  document.querySelectorAll(".seg button").forEach(b=>
+    b.setAttribute("aria-pressed", b.getAttribute("data-f")===state.f ? "true":"false"));
+}
+document.querySelectorAll(".seg button").forEach(b=>{
+  b.addEventListener("click",()=>{ state.f=b.getAttribute("data-f"); syncSeg(); render(); });
+});
+document.getElementById("q").addEventListener("input",e=>{
+  state.q=e.target.value.trim().toLowerCase(); render();
+});
+
+/* pin the column header directly below the nav + control bar, whatever they measure */
+function syncSticky(){
+  const nav=document.querySelector("nav");
+  const bar=document.querySelector(".controls");
+  if(!bar||!nav) return;
+  if(getComputedStyle(bar).position!=="sticky"){
+    document.querySelectorAll("thead th").forEach(th=>{th.style.top="";});
+    return;
+  }
+  const navH=nav.getBoundingClientRect().height;
+  bar.style.top=navH+"px";
+  const top=navH+bar.getBoundingClientRect().height;
+  document.querySelectorAll("thead th").forEach(th=>{ th.style.top=top+"px"; });
+}
+window.addEventListener("resize",syncSticky);
+syncSticky();
+render();
+</script>
+</body>
+</html>
