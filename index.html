@@ -43,6 +43,13 @@
   .btn-ghost:hover{background:var(--moss);color:#fff}
   .btn-signal{background:var(--signal);border-color:#b85a26}
   .btn-signal:hover{background:#b85a26}
+  /* `.navlinks a` (0,1,1) outranks `.btn` (0,1,0), so the nav CTA was
+     inheriting ink on moss — 2.7:1. Restore the white it was meant to have. */
+  .navlinks a.btn{color:#fff}
+  .navlinks a.btn:hover{color:#fff}
+  .navtoggle{display:none;background:transparent;border:1px solid var(--line);border-radius:2px;padding:8px 10px;cursor:pointer;line-height:0;color:var(--ink)}
+  .navtoggle svg{display:block}
+  .navtoggle:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
 
   /* HERO */
   .hero{padding:78px 0 62px;border-bottom:1px solid var(--line)}
@@ -260,7 +267,18 @@
     .signal-grid{grid-template-columns:1fr 1fr}
     .tl{grid-template-columns:1fr}
     .metrics{grid-template-columns:1fr}
-    .navlinks{display:none}
+    nav .wrap{position:relative}
+    .navtoggle{display:block}
+    .navlinks{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;gap:0;
+      background:var(--paper);border-bottom:1px solid var(--line);
+      box-shadow:0 18px 30px -22px rgba(17,32,28,.5);padding:6px 0 12px;
+    }
+    .navlinks.open{display:flex}
+    .navlinks a{padding:13px 32px;font-size:15px;border-top:1px solid var(--line)}
+    .navlinks a:first-child{border-top:none}
+    .navlinks a.btn{margin:12px 32px 2px;text-align:center;border-top:none;padding:12px 20px}
     .trow,.triggers-head{grid-template-columns:1fr auto 1fr;font-size:12.5px}
     .ds-grid{grid-template-columns:1fr}
     .ds-controls{border-right:none;border-bottom:1px solid var(--line)}
@@ -282,7 +300,10 @@
 <nav>
   <div class="wrap">
     <a class="logo" href="/" aria-label="ExitsIQ home">Exits<b>IQ</b></a>
-    <div class="navlinks">
+    <button class="navtoggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navlinks">
+      <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    </button>
+    <div class="navlinks" id="navlinks">
       <a href="#signals">Signal Engine</a>
       <a href="#cxo">AI Exit Officer</a>
       <a href="#timeline">Exit Timeline</a>
@@ -695,6 +716,23 @@
 </footer>
 
 <script>
+/* ---------- mobile menu ---------- */
+(function(){
+  var t=document.querySelector('.navtoggle'), l=document.querySelector('.navlinks');
+  if(!t||!l) return;
+  function close(){ l.classList.remove('open'); t.setAttribute('aria-expanded','false'); }
+  t.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=l.classList.toggle('open');
+    t.setAttribute('aria-expanded', open?'true':'false');
+  });
+  l.addEventListener('click',function(e){ if(e.target.closest('a')) close(); });
+  document.addEventListener('click',function(e){
+    if(!l.contains(e.target) && !t.contains(e.target)) close();
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  window.addEventListener('resize',function(){ if(window.innerWidth>900) close(); });
+})();
   // ---- Live Financial Readiness calculator ----
   var MULTIPLE = 3.2;      // default SDE multiple (swap in DealLedger comps later)
   var TAX_RATE = 0.25;     // flat estimated effective rate on proceeds
