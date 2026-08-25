@@ -45,6 +45,13 @@
   .navlinks a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
   .navlinks a:hover{color:var(--moss)}
   .navlinks a[aria-current="page"]{color:var(--moss);border-bottom:2px solid var(--moss);padding-bottom:2px}
+  /* `.navlinks a` (0,1,1) outranks `.btn` (0,1,0), so the nav CTA was
+     inheriting ink on moss — 2.7:1. Restore the white it was meant to have. */
+  .navlinks a.btn{color:#fff}
+  .navlinks a.btn:hover{color:#fff}
+  .navtoggle{display:none;background:transparent;border:1px solid var(--line);border-radius:2px;padding:8px 10px;cursor:pointer;line-height:0;color:var(--ink)}
+  .navtoggle svg{display:block}
+  .navtoggle:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
   .btn{display:inline-block;background:var(--moss);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:2px;border:1px solid var(--moss-deep);transition:background .15s;cursor:pointer}
   .btn:hover{background:var(--moss-deep)}
   .navlinks a.btn[aria-current]{border-bottom:1px solid var(--moss-deep);padding-bottom:11px}
@@ -175,12 +182,36 @@
     .controls{position:static}
     thead th{position:static}
   }
+  /* The detail drawer lives in a cell of a 960px-min table. Inside the
+     horizontally scrolling wrapper it would lay out at full table width and
+     run off-screen, so below the scroll breakpoint it is pinned to the left
+     edge and clamped to the viewport. */
+  @media(max-width:1080px){
+    tr.detail>td{padding:0}
+    .dt{position:sticky;left:0;width:calc(100vw - 64px);max-width:calc(100vw - 64px);grid-template-columns:1fr;gap:22px;padding:14px 0 30px}
+  }
   @media(max-width:900px){
-    .navlinks{display:none}
-    .dt{grid-template-columns:1fr;gap:22px}
+    nav .wrap{position:relative}
+    .navtoggle{display:block}
+    .navlinks{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;gap:0;
+      background:var(--paper);border-bottom:1px solid var(--line);
+      box-shadow:0 18px 30px -22px rgba(17,32,28,.5);padding:6px 0 12px;
+    }
+    .navlinks.open{display:flex}
+    .navlinks a{padding:13px 32px;font-size:15px;border-top:1px solid var(--line)}
+    .navlinks a:first-child{border-top:none}
+    .navlinks a[aria-current="page"]{border-bottom:none;padding-bottom:13px}
+    .navlinks a.btn{margin:12px 32px 2px;text-align:center;border-top:none;padding:12px 20px}
     .strip .stat{padding-left:0;border-right:none;border-bottom:1px solid var(--line)}
   }
-  @media(max-width:560px){.wrap,.wrap-wide{padding:0 22px}}
+  @media(max-width:560px){
+    .wrap,.wrap-wide{padding:0 22px}
+    .dt{width:calc(100vw - 44px);max-width:calc(100vw - 44px)}
+    .navlinks a{padding-left:22px;padding-right:22px}
+    .navlinks a.btn{margin-left:22px;margin-right:22px}
+  }
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -189,7 +220,10 @@
 <nav>
   <div class="wrap">
     <a class="logo" href="/" aria-label="ExitsIQ home">Exits<b>IQ</b></a>
-    <div class="navlinks">
+    <button class="navtoggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navlinks">
+      <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    </button>
+    <div class="navlinks" id="navlinks">
       <a href="/#signals">Signal Engine</a>
       <a href="/#cxo">AI Exit Officer</a>
       <a href="/#timeline">Exit Timeline</a>
@@ -347,6 +381,24 @@
 </footer>
 
 <script>
+/* ---------- mobile menu ---------- */
+(function(){
+  var t=document.querySelector('.navtoggle'), l=document.querySelector('.navlinks');
+  if(!t||!l) return;
+  function close(){ l.classList.remove('open'); t.setAttribute('aria-expanded','false'); }
+  t.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=l.classList.toggle('open');
+    t.setAttribute('aria-expanded', open?'true':'false');
+  });
+  l.addEventListener('click',function(e){ if(e.target.closest('a')) close(); });
+  document.addEventListener('click',function(e){
+    if(!l.contains(e.target) && !t.contains(e.target)) close();
+  });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  window.addEventListener('resize',function(){ if(window.innerWidth>900) close(); });
+})();
+
 /* v = total 7(a) $M FY2025 | l = loans | rate = avg | av = acquisition $M CY2025 | al = acq loans */
 const D=[
 {r:1,n:"Live Oak Banking Company",hq:"Wilmington, NC",l:2280,v:2852.7,rate:9.34,av:896.4,al:679,tags:["eta"],note:"The deepest acquisition book in the country and a dedicated Search Fund Lending desk &mdash; the only lender with named, public search-fund leadership. The tradeoff is the highest documented credit bar in the market: its own search-fund director has stated Live Oak underwrites to a <b>1.5&times; DSCR against competitors' 1.1&ndash;1.2&times;</b>. Deep verticals in veterinary, dental, self-storage and child care. EBIT puts it at 8.61% average acquisition rate with a 1.93% default rate &mdash; top volume and near-lowest pricing at once.",flags:[["gd","Search fund desk"],["","1.5&times; DSCR overlay"],["","44 states"],["","Vet / dental / self-storage"]]},
