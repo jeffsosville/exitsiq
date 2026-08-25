@@ -309,6 +309,7 @@
       <a href="#timeline">Exit Timeline</a>
       <a href="#structure">Deal Structure</a>
       <a href="#graph">The Graph</a>
+      <a href="#markets">Marketplaces</a>
       <a href="/lenders">Lender Index</a>
       <a href="#start" class="btn">Get my readiness score</a>
     </div>
@@ -351,6 +352,26 @@
       <div class="gauge-track"><div class="gauge-fill" id="gaugeFill"></div></div>
 
       <div class="calc-inputs">
+        <div class="fld" style="grid-column:1/-1">
+          <label>Industry</label>
+          <div class="inwrap"><select id="i_ind" style="width:100%;border:0;background:none;font:inherit;color:inherit;padding:0;outline:none">
+            <option value="other">Select your industry</option>
+            <option value="cleaning">Cleaning &amp; janitorial</option>
+            <option value="landscaping">Landscaping &amp; lawn</option>
+            <option value="hvac">HVAC</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="electrical">Electrical</option>
+            <option value="construction">Construction &amp; contracting</option>
+            <option value="automotive">Automotive</option>
+            <option value="restaurant">Restaurant &amp; food service</option>
+            <option value="retail">Retail</option>
+            <option value="healthcare">Healthcare services</option>
+            <option value="manufacturing">Manufacturing</option>
+            <option value="technology">Technology</option>
+            <option value="vending">Vending &amp; unattended retail</option>
+            <option value="atm">ATM route</option>
+          </select></div>
+        </div>
         <div class="fld">
           <label>Business revenue</label>
           <div class="inwrap"><span class="pre">$</span><input type="number" id="i_rev" placeholder="900,000" value="900000"></div>
@@ -381,7 +402,31 @@
         <div class="co"><div class="col">Est. business value</div><div class="cov" id="o_val">$0</div></div>
         <div class="co accent"><div class="col">Est. after-tax proceeds</div><div class="cov" id="o_net">$0</div></div>
       </div>
-      <div class="gauge-foot">Estimate only, on default <b>3.2×</b> SDE multiple — not financial or tax advice. Real figures draw from <b>DealLedger</b> comps.</div>
+      <div class="gauge-foot" id="compSrc">2.54x SDE &mdash; the median asking multiple across <b>12,533</b> businesses in our index.</div>
+      <div class="gauge-foot" style="opacity:.75;margin-top:6px">Asking prices, not closed sales &mdash; so treat this as a ceiling. Estimate only, not financial or tax advice.</div>
+
+      <!-- lead capture -->
+      <div id="leadWrap" style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14)">
+        <div id="leadPitch" style="font-size:13.5px;line-height:1.5;margin-bottom:10px;opacity:.9">
+          Want this emailed to you, with the three things that would move the number most?
+        </div>
+        <div id="leadForm">
+          <input type="text" id="l_hp" tabindex="-1" autocomplete="off" aria-hidden="true"
+                 style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div class="inwrap"><input type="text" id="l_name" placeholder="Your name" style="width:100%"></div>
+            <div class="inwrap"><input type="email" id="l_email" placeholder="Email" style="width:100%"></div>
+          </div>
+          <button type="button" id="l_send" class="btn btn-signal" style="width:100%;padding:12px;font-size:14.5px;border:0;cursor:pointer">
+            Email me my score
+          </button>
+          <div id="l_msg" style="font-size:12.5px;margin-top:8px;min-height:1em;opacity:.9"></div>
+        </div>
+      </div>
+
+      <!-- routing to the right marketplace, shown only when relevant -->
+      <div id="routeBox" style="display:none;margin-top:14px;padding:12px 14px;border-radius:8px;
+           background:rgba(180,83,9,.14);border:1px solid rgba(180,83,9,.3);font-size:13.5px;line-height:1.5"></div>
     </div>
   </div>
 </header>
@@ -689,6 +734,63 @@
 </section>
 
 <!-- FINAL -->
+<!-- WHERE LISTINGS GO -->
+<section id="markets" class="signal-sec" style="border-top:1px solid rgba(0,0,0,.06)">
+  <div class="wrap">
+    <span class="eyebrow">When you're ready</span>
+    <h2 style="margin-bottom:10px">You don't have to go find a broker.</h2>
+    <p style="max-width:62ch;margin-bottom:30px">
+      Readiness is the first half. The second half is a buyer. We run the marketplaces
+      where these businesses actually change hands &mdash; so the same people who scored
+      you are the ones who sell it, with the comps already in hand.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px">
+
+      <a href="https://cleaningexits.com" style="text-decoration:none;color:inherit;display:block;
+         padding:20px;border:1px solid rgba(0,0,0,.1);border-radius:10px;transition:border-color .15s"
+         onmouseover="this.style.borderColor='#B45309'" onmouseout="this.style.borderColor='rgba(0,0,0,.1)'">
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#B45309;margin-bottom:8px">Marketplace</div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px">CleaningExits</div>
+        <div style="font-size:13.5px;line-height:1.5;opacity:.8">
+          Janitorial, commercial and residential cleaning, landscaping, pressure washing,
+          laundromats, junk removal.
+        </div>
+      </a>
+
+      <a href="https://vendingexits.com" style="text-decoration:none;color:inherit;display:block;
+         padding:20px;border:1px solid rgba(0,0,0,.1);border-radius:10px;transition:border-color .15s"
+         onmouseover="this.style.borderColor='#B45309'" onmouseout="this.style.borderColor='rgba(0,0,0,.1)'">
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#B45309;margin-bottom:8px">Marketplace</div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px">VendingExits</div>
+        <div style="font-size:13.5px;line-height:1.5;opacity:.8">
+          Vending routes, micro markets, unattended retail.
+        </div>
+      </a>
+
+      <a href="https://atmbrokerage.com" style="text-decoration:none;color:inherit;display:block;
+         padding:20px;border:1px solid rgba(0,0,0,.1);border-radius:10px;transition:border-color .15s"
+         onmouseover="this.style.borderColor='#B45309'" onmouseout="this.style.borderColor='rgba(0,0,0,.1)'">
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#B45309;margin-bottom:8px">Brokerage</div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px">ATM Brokerage</div>
+        <div style="font-size:13.5px;line-height:1.5;opacity:.8">
+          ATM routes and processing portfolios. 200+ transactions since 2012.
+        </div>
+      </a>
+
+      <div style="padding:20px;border:1px dashed rgba(0,0,0,.14);border-radius:10px;background:rgba(0,0,0,.015)">
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin-bottom:8px">Data layer</div>
+        <div style="font-size:19px;font-weight:600;margin-bottom:6px">DealLedger</div>
+        <div style="font-size:13.5px;line-height:1.5;opacity:.8">
+          38,000+ business listings tracked across 700 brokers. It's where the multiples
+          on this page come from, and it's free to anyone.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section id="start" class="final">
   <div class="wrap">
     <span class="eyebrow">Start with one honest question</span>
@@ -711,6 +813,13 @@
       <a href="#structure">Deal Structure</a>
       <a href="#graph">The Graph</a>
       <a href="/lenders">Lender Index</a>
+      <a href="#markets">Marketplaces</a>
+    </div>
+    <div style="margin-top:14px;font-size:12.5px;opacity:.62">
+      <a href="https://cleaningexits.com">CleaningExits</a> &middot;
+      <a href="https://vendingexits.com">VendingExits</a> &middot;
+      <a href="https://atmbrokerage.com">ATM Brokerage</a> &middot;
+      <a href="https://dealledger.org">DealLedger</a>
     </div>
   </div>
 </footer>
@@ -734,7 +843,46 @@
   window.addEventListener('resize',function(){ if(window.innerWidth>900) close(); });
 })();
   // ---- Live Financial Readiness calculator ----
-  var MULTIPLE = 3.2;      // default SDE multiple (swap in DealLedger comps later)
+  // Median ASKING multiple by industry, computed from the DealLedger listings
+  // index. Filtered to asking $50K-$20M, SDE $10K-$5M, multiple 0.5x-12x to
+  // strip out obvious data errors.
+  //
+  // These are ASKING multiples, not closed-sale multiples. Sellers ask high, so
+  // treat these as a ceiling on a first estimate. We say so on the page and in
+  // the email rather than quietly shaving the number - an owner who later finds
+  // out we padded it stops trusting everything else we tell them.
+  //
+  // Refresh: median of asking_price/cash_flow grouped by vertical in
+  // listings_direct. Last pulled August 2026.
+  var COMPS = {
+    other:        {m:2.54, lo:1.85, hi:3.50, n:12533, label:'all industries'},
+    cleaning:     {m:2.58, lo:1.79, hi:3.51, n:248,   label:'cleaning'},
+    landscaping:  {m:1.91, lo:1.00, hi:4.22, n:53,    label:'landscaping'},
+    hvac:         {m:3.04, lo:1.00, hi:4.98, n:66,    label:'HVAC'},
+    plumbing:     {m:3.45, lo:1.43, hi:4.72, n:63,    label:'plumbing'},
+    electrical:   {m:4.22, lo:1.00, hi:5.85, n:65,    label:'electrical'},
+    construction: {m:4.10, lo:2.18, hi:6.00, n:238,   label:'construction'},
+    automotive:   {m:3.69, lo:1.36, hi:5.47, n:355,   label:'automotive'},
+    restaurant:   {m:2.44, lo:1.00, hi:5.00, n:673,   label:'restaurant'},
+    retail:       {m:3.31, lo:1.09, hi:5.84, n:474,   label:'retail'},
+    healthcare:   {m:3.11, lo:1.00, hi:5.00, n:256,   label:'healthcare'},
+    manufacturing:{m:2.79, lo:1.00, hi:5.33, n:145,   label:'manufacturing'},
+    technology:   {m:2.53, lo:1.00, hi:3.96, n:986,   label:'technology'},
+    // Thin samples. Fall back to the all-industry figure and say so.
+    vending:      {m:2.54, lo:1.85, hi:3.50, n:0,     label:'vending'},
+    atm:          {m:2.54, lo:1.85, hi:3.50, n:0,     label:'ATM routes'}
+  };
+
+  // When an owner is ready to list, this is where they go.
+  var ROUTES = {
+    cleaning:    {name:'CleaningExits', url:'https://cleaningexits.com'},
+    landscaping: {name:'CleaningExits', url:'https://cleaningexits.com'},
+    vending:     {name:'VendingExits',  url:'https://vendingexits.com'},
+    atm:         {name:'ATM Brokerage', url:'https://atmbrokerage.com'}
+  };
+
+  function comps(){ return COMPS[ (document.getElementById('i_ind')||{}).value ] || COMPS.other; }
+
   var TAX_RATE = 0.25;     // flat estimated effective rate on proceeds
   var animatedOnce = false;
 
@@ -750,7 +898,8 @@
     var rev=val('i_rev'), sde=val('i_sde'), debt=val('i_debt'),
         save=val('i_save'), target=val('i_target'), years=val('i_years');
 
-    var bizValue = sde*MULTIPLE;
+    var C = comps();
+    var bizValue = sde*C.m;
     var netProceeds = bizValue*(1-TAX_RATE);
     var afterDebt = netProceeds - debt;
     var totalReady = afterDebt + save;
@@ -781,6 +930,23 @@
     else if(score>=45){v.textContent='GETTING READY';}
     else{v.textContent='EARLY STAGE';}
 
+    // Say where the number came from. This is the whole credibility argument -
+    // every other calculator gives an unsourced multiple.
+    var src=document.getElementById('compSrc');
+    if(src){
+      src.innerHTML = C.n>0
+        ? C.m.toFixed(2)+'x SDE &mdash; the median asking multiple across <b>'+
+          C.n.toLocaleString()+'</b> '+C.label+' businesses in our index. '+
+          'Most sit between '+C.lo.toFixed(1)+'x and '+C.hi.toFixed(1)+'x.'
+        : C.m.toFixed(2)+'x SDE &mdash; we do not have enough '+C.label+
+          ' comps yet, so this uses the all-industry median across '+
+          COMPS.other.n.toLocaleString()+' businesses.';
+    }
+    if(window.showRoute) window.showRoute();
+    window.__lead = {industry:(document.getElementById('i_ind')||{}).value||'other',
+      score:score, revenue:rev, sde:sde, valuation:bizValue,
+      netProceeds:afterDebt, years:years, verdict:v.textContent};
+
     // feed the Deal Structure section, unless the visitor has edited it themselves
     if(window.dsSync) window.dsSync(bizValue);
 
@@ -798,7 +964,53 @@
     },24);
     setTimeout(function(){document.getElementById('gaugeFill').style.width=target+'%';},60);
   }
-  ['i_rev','i_sde','i_debt','i_save','i_target','i_years'].forEach(function(id){
+  /* ---------- routing to the vertical marketplace ---------- */
+  window.showRoute = function showRoute(){
+    var box=document.getElementById('routeBox'); if(!box) return;
+    var ind=(document.getElementById('i_ind')||{}).value;
+    var r=ROUTES[ind];
+    if(!r){ box.style.display='none'; return; }
+    box.style.display='block';
+    box.innerHTML='When you\u2019re ready to test the market, <a href="'+r.url+
+      '" style="color:#F0A85C;font-weight:600">'+r.name+
+      '</a> is where businesses like yours get listed.';
+  }
+
+  /* ---------- lead capture ---------- */
+  (function(){
+    var btn=document.getElementById('l_send'); if(!btn) return;
+    btn.addEventListener('click', function(){
+      var msg=document.getElementById('l_msg');
+      var name=(document.getElementById('l_name').value||'').trim();
+      var email=(document.getElementById('l_email').value||'').trim();
+      if(name.length<2){ msg.textContent='Your name, please.'; return; }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent='That email doesn\u2019t look right.'; return; }
+
+      btn.disabled=true; btn.textContent='Sending\u2026'; msg.textContent='';
+      compute(); // make sure __lead reflects the current inputs
+
+      fetch('/api/lead',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(Object.assign({
+          name:name, email:email, website:document.getElementById('l_hp').value||''
+        }, window.__lead||{}))
+      }).then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(res){
+          if(!res.ok) throw new Error(res.j.error||'Something went wrong.');
+          document.getElementById('leadForm').style.display='none';
+          document.getElementById('leadPitch').innerHTML=
+            '<b>Sent.</b> Check your inbox \u2014 and your spam folder, just in case.';
+          showRoute();
+        })
+        .catch(function(e){
+          msg.textContent=e.message||'Something went wrong. Try again.';
+          btn.disabled=false; btn.textContent='Email me my score';
+        });
+    });
+  })();
+
+  ['i_rev','i_sde','i_debt','i_save','i_target','i_years','i_ind'].forEach(function(id){
     document.getElementById(id).addEventListener('input',compute);
   });
   function fillBars(root){root.querySelectorAll('.rr-bar i').forEach(i=>i.style.width=i.dataset.w);}
