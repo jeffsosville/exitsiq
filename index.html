@@ -1002,8 +1002,10 @@
         .then(function(res){
           if(!res.ok) throw new Error(res.j.error||'Something went wrong.');
           document.getElementById('leadForm').style.display='none';
-          document.getElementById('leadPitch').innerHTML=
-            '<b>Sent.</b> Check your inbox \u2014 and your spam folder, just in case.';
+          // Only promise an inbox if one actually went out.
+          document.getElementById('leadPitch').innerHTML = res.j.emailed
+            ? '<b>Sent.</b> Check your inbox \u2014 and your spam folder, just in case.'
+            : '<b>Got it.</b> We have your details and John will follow up directly.';
           showRoute();
         })
         .catch(function(e){
