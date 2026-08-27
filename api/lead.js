@@ -113,7 +113,7 @@ module.exports = async function handler(req, res) {
         await send({
           from: FROM,
           to: [lead.email],
-          reply_to: 'john@atmbrokerage.com',
+          reply_to: 'hello@exitsiq.com',
           subject: `Your readiness score: ${lead.score ?? '—'} of 100`,
           html: ownerHtml(lead, route),
           text: ownerText(lead, route),
@@ -160,7 +160,7 @@ function ownerHtml(l, route) {
 </table>
 <p style="font-size:13px;color:#666">That valuation uses the median asking multiple for your industry from our listings index. It is a starting point, not an appraisal — what a business actually sells for depends on customer concentration, how much of it runs without you, and how clean the books are.</p>
 ${next}
-<p>If you want to talk through what would move that number, reply to this email. John reads these himself.</p>
+<p>If you want to talk through what would move that number, just reply to this email.</p>
 <p>&mdash; ExitsIQ</p>
 <p style="font-size:12px;color:#999;margin-top:28px;border-top:1px solid #eee;padding-top:14px">
 <a href="https://exitsiq.com" style="color:#999">exitsiq.com</a></p>
@@ -181,8 +181,7 @@ That valuation uses the median asking multiple for your industry from our
 listings index. It is a starting point, not an appraisal.
 
 ${route ? `When you are ready to test the market, ${route.name} (${route.url}) is where businesses like yours get listed.\n` : ''}
-If you want to talk through what would move that number, reply to this email.
-John reads these himself.
+If you want to talk through what would move that number, just reply to this email.
 
 -- ExitsIQ
 exitsiq.com
