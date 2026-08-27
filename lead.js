@@ -29,7 +29,7 @@ const esc = (s) =>
 const money = (n) =>
   n == null || isNaN(n) ? '—' : '$' + Math.round(Number(n)).toLocaleString('en-US');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
@@ -123,7 +123,7 @@ export default async function handler(req, res) {
     console.error('lead handler error:', err);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
-}
+};
 
 function ownerHtml(l, route) {
   const next = route
