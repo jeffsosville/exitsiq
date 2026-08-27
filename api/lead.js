@@ -87,6 +87,12 @@ module.exports = async function handler(req, res) {
     }
 
     // ── 2. Email. ──
+    // Track whether the owner's copy actually sent. Saying "Sent." when it
+    // didn't is worse than saying nothing - the person waits for an email that
+    // is never coming, and we look broken instead of honest.
+    let ownerEmailSent = false;
+    let emailError = null;
+
     const apiKey = process.env.RESEND_API_KEY;
     if (apiKey) {
       const send = async (payload) => {
@@ -95,17 +101,28 @@ module.exports = async function handler(req, res) {
           headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!r.ok) console.error('Resend', r.status, (await r.text()).slice(0, 300));
+        if (!r.ok) {
+          const body = (await r.text()).slice(0, 300);
+          console.error('Resend', r.status, body);
+          throw new Error(`Resend ${r.status}: ${body}`);
+        }
+        return true;
       };
 
-      await send({
-        from: FROM,
-        to: [lead.email],
-        reply_to: 'john@atmbrokerage.com',
-        subject: `Your readiness score: ${lead.score ?? '—'} of 100`,
-        html: ownerHtml(lead, route),
-        text: ownerText(lead, route),
-      }).catch((e) => console.error('owner email', e));
+      try {
+        await send({
+          from: FROM,
+          to: [lead.email],
+          reply_to: 'john@atmbrokerage.com',
+          subject: `Your readiness score: ${lead.score ?? '—'} of 100`,
+          html: ownerHtml(lead, route),
+          text: ownerText(lead, route),
+        });
+        ownerEmailSent = true;
+      } catch (e) {
+        emailError = String(e.message || e);
+        console.error('owner email failed:', emailError);
+      }
 
       await send({
         from: FROM,
@@ -115,10 +132,13 @@ module.exports = async function handler(req, res) {
         html: brokerHtml(lead),
       }).catch((e) => console.error('broker email', e));
     } else {
-      console.error('RESEND_API_KEY missing — lead recorded, no email sent.');
+      emailError = 'RESEND_API_KEY not set';
+      console.error('RESEND_API_KEY missing - lead recorded, no email sent.');
     }
 
-    return res.status(200).json({ ok: true });
+    // The lead is saved either way. Report the email honestly so the page can
+    // say "we have it, John will follow up" rather than "check your inbox".
+    return res.status(200).json({ ok: true, emailed: ownerEmailSent, emailError });
   } catch (err) {
     console.error('lead handler error:', err);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
