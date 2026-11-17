@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — ExitsIQ</title>
+<meta name="description" content="Free readiness score. Exit prep from $199 a month: valuation, a 12-month roadmap, tax and lender partners, and a reassessment every quarter until you're ready to sell.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#11201c;--paper:#f3efe6;--paper-2:#ece6d8;--moss:#2f6b54;--moss-deep:#1d4a3a;--signal:#d8743a;--signal-soft:#e8a878;--line:#cabf9e;--line-dk:#243832;--muted:#5d6862;--gold:#b89a4e}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--moss)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(243,239,230,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:23px;letter-spacing:-.01em;text-decoration:none;color:inherit}
+  .logo b{color:var(--moss)}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
+  .navlinks a:hover{color:var(--moss)}
+  .btn{display:inline-block;background:var(--moss);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:2px;border:1px solid var(--moss-deep);text-align:center}
+  .btn:hover{background:var(--moss-deep)}
+  .btn-ghost{background:transparent;color:var(--moss);border:1px solid var(--moss)}
+  .btn-ghost:hover{background:var(--moss);color:#fff}
+  .btn-signal{background:var(--signal);border-color:#b85a26}
+  .btn-signal:hover{background:#b85a26}
+  .navlinks a.btn{color:#fff}
+  .hero{padding:78px 0 54px;border-bottom:1px solid var(--line)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(42px,5.8vw,72px);line-height:1;letter-spacing:-.03em;margin:16px 0 18px;max-width:880px}
+  .hero h1 em{font-style:italic;color:var(--moss)}
+  .hero p{font-size:18px;color:var(--muted);max-width:620px}
+  section{padding:70px 0;border-bottom:1px solid var(--line)}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,3.6vw,44px);line-height:1.05;letter-spacing:-.02em;margin:12px 0 30px}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .tier{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:30px 28px;display:flex;flex-direction:column}
+  .tier.feat{background:var(--ink);color:var(--paper);border-color:var(--ink);box-shadow:0 24px 50px -28px rgba(17,32,28,.6)}
+  .tname{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--moss)}
+  .tier.feat .tname{color:var(--signal-soft)}
+  .price{font-family:'Fraunces',serif;font-weight:600;font-size:54px;line-height:1;margin:14px 0 4px}
+  .per{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .tier.feat .per{color:#8fa39b}
+  .tdesc{font-size:15px;margin-bottom:18px}
+  .tier ul{list-style:none;flex:1;margin-bottom:26px}
+  .tier li{font-size:14.5px;padding:9px 0 9px 22px;border-top:1px solid var(--line);position:relative}
+  .tier.feat li{border-color:var(--line-dk);color:#cdd6d1}
+  .tier li::before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;border-radius:50%;background:var(--moss);box-shadow:0 0 0 3px rgba(47,107,84,.22)}
+  .tier li.inc{color:var(--muted)}
+  .tier.feat li.inc{color:#8fa39b}
+  .tier li.inc::before{display:none}
+  .tier li.inc{padding-left:0}
+  .note{font-size:14px;color:var(--muted);margin-top:22px;max-width:760px}
+  .loop{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line)}
+  .loop div{padding:22px 20px 22px 0;border-right:1px solid var(--line);margin-right:20px}
+  .loop div:last-child{border-right:none}
+  .loop .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--signal);margin-bottom:6px}
+  .loop h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin-bottom:6px}
+  .loop p{font-size:14.5px;color:var(--muted)}
+  .faq{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+  .q{padding:20px 0;border-top:1px solid var(--line)}
+  .q h4{font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin-bottom:6px}
+  .q p{font-size:15px;color:var(--muted)}
+  .final{text-align:center;padding:80px 0;border-bottom:none}
+  .final h2{margin-bottom:12px}
+  .final p{color:var(--muted);margin-bottom:26px;font-size:17px}
+  .final .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  footer{border-top:1px solid var(--line);padding:26px 0;font-size:13px;color:var(--muted)}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--muted);text-decoration:none;margin-left:18px}
+  @media(max-width:900px){
+    .navlinks a:not(.btn){display:none}
+    .tiers,.faq{grid-template-columns:1fr}
+    .loop{grid-template-columns:1fr 1fr}
+    .loop div{border-right:none;border-bottom:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="ExitsIQ home">Exits<b>IQ</b></a>
+    <div class="navlinks">
+      <a href="/#timeline">Exit Timeline</a>
+      <a href="/lenders">Lender Index</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/#start" class="btn">Get my readiness score</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Pricing &middot; Valuation and exit prep</div>
+    <h1>Know what it&rsquo;s worth. Then make it worth <em>more</em>.</h1>
+    <p>Start with a free readiness score. When you want the work done, Exit Prep is a monthly plan you keep until you&rsquo;re ready to sell, and stop when you are.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Plans</div>
+    <h2>One free score. Two ways to prepare.</h2>
+    <div class="tiers">
+      <div class="tier">
+        <div class="tname">Readiness Score</div>
+        <div class="price">Free</div>
+        <div class="per">No card, two minutes</div>
+        <p class="tdesc">Where you stand today.</p>
+        <ul>
+          <li>Readiness score, 0&ndash;100</li>
+          <li>Estimated value from DealLedger industry multiples</li>
+          <li>After-tax proceeds estimate</li>
+          <li>The three things holding the score down</li>
+        </ul>
+        <a class="btn btn-ghost" href="/#start">Get my score</a>
+      </div>
+      <div class="tier feat">
+        <div class="tname">Exit Prep</div>
+        <div class="price">$199</div>
+        <div class="per">Per month</div>
+        <p class="tdesc">A valuation, a plan, the right advisors, and a check-in every quarter.</p>
+        <ul>
+          <li class="inc">Everything in the free score, plus:</li>
+          <li>Full valuation report with comparable listings</li>
+          <li>12-month roadmap of what to fix first</li>
+          <li>Introductions to vetted tax advisors and SBA lenders</li>
+          <li>Quarterly reassessment: score and value tracked over time</li>
+          <li>Deal-structure and after-tax scenarios</li>
+        </ul>
+        <a class="btn btn-signal" href="mailto:info@sosville.co?subject=ExitsIQ%20Exit%20Prep">Start Exit Prep</a>
+      </div>
+      <div class="tier">
+        <div class="tname">Exit Prep + Advisor</div>
+        <div class="price">$499</div>
+        <div class="per">Per month</div>
+        <p class="tdesc">The same plan, with a broker who has closed 200+ deals working it with you.</p>
+        <ul>
+          <li class="inc">Everything in Exit Prep, plus:</li>
+          <li>Monthly call with an ExitsIQ advisor</li>
+          <li>Add-backs matched to your tax returns before a buyer asks</li>
+          <li>Buyer-ready package: financial summary and CIM draft</li>
+          <li>When you&rsquo;re ready, a straight path to market through our brokerage and marketplaces</li>
+        </ul>
+        <a class="btn" href="mailto:info@sosville.co?subject=ExitsIQ%20Exit%20Prep%20%2B%20Advisor">Talk to an advisor</a>
+      </div>
+    </div>
+    <p class="note">Month to month. Cancel any time. Tax and lending work is done by our partner firms under their own engagement; we never charge you for an introduction.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What you&rsquo;re paying for</div>
+    <h2>The loop, until you&rsquo;re ready.</h2>
+    <div class="loop">
+      <div><div class="n">01</div><h3>Assess</h3><p>Score, value and after-tax proceeds today.</p></div>
+      <div><div class="n">02</div><h3>Plan</h3><p>What&rsquo;s holding the business back, in order.</p></div>
+      <div><div class="n">03</div><h3>Improve</h3><p>With the right tax advisor and lender beside you.</p></div>
+      <div><div class="n">04</div><h3>Reassess</h3><p>Every quarter, until the number is the one you need.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Questions</div>
+    <h2>Before you sign up.</h2>
+    <div class="faq">
+      <div class="q"><h4>Do I have to sell through you?</h4><p>No. Use the plan, then sell however you like. If you sell with us, the path is already built.</p></div>
+      <div class="q"><h4>Where do the valuation numbers come from?</h4><p>Industry multiples from DealLedger, the open record of 21K+ businesses listed for sale. They&rsquo;re asking multiples, and we say so.</p></div>
+      <div class="q"><h4>Who are the tax advisors and lenders?</h4><p>Small firms that do business-sale tax work, and SBA lenders that actually fund acquisitions. We vet them before we introduce anyone.</p></div>
+      <div class="q"><h4>How long do owners stay?</h4><p>Usually one to five years before a sale. You can pause or cancel any month.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Will I be ok?</h2>
+    <p>Find out in two minutes. It&rsquo;s free.</p>
+    <div class="ctas">
+      <a href="/#start" class="btn btn-signal" style="padding:14px 28px;font-size:15px">Get my readiness score free</a>
+      <a href="mailto:info@sosville.co?subject=ExitsIQ" class="btn btn-ghost" style="padding:14px 28px;font-size:15px">Talk to the team</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="/" style="font-size:19px">Exits<b>IQ</b></a>
+    <div><a href="/">Home</a><a href="/lenders">Lender Index</a><a href="/pricing">Pricing</a><a href="https://sosville.co">Sosville Group</a></div>
+  </div>
+</footer>
+</body>
+</html>
